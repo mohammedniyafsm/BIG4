@@ -76,7 +76,7 @@ export default function SiteFooter({
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-black text-white">
+    <footer className="relative overflow-hidden  text-white">
       {/* ================= MOBILE ================= */}
 
       <div className="flex flex-col justify-between gap-16 px-6 py-8 lg:hidden">
