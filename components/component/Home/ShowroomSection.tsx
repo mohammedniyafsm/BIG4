@@ -8,7 +8,8 @@ import ShowroomCard from "@/components/ui/ShowroomCard";
 gsap.registerPlugin(ScrollTrigger);
 
 const showroom = {
-  images: ["/1.jpg", "/1.jpg"],
+  images: ["/1.png"],
+  mapUrl: "https://maps.google.com/maps?q=Sarah+Commercial+Complex,+Mangalore+-+Mysore+Hwy,+opp.+KSRTC+Bus+Stand,+Jattipalla,+Sullia,+Karnataka+574239&t=&z=13&ie=UTF8&iwloc=&output=embed",
 
   title: "BIG4 Experience Center",
 
@@ -110,6 +111,7 @@ export default function ShowroomSection() {
         <div ref={cardRef}>
           <ShowroomCard
             images={showroom.images}
+            mapUrl={showroom.mapUrl}
             title={showroom.title}
             city={showroom.city}
             address={showroom.address}

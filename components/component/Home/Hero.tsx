@@ -107,8 +107,8 @@ export default function Hero() {
           height={500}
           priority
           className="
-            w-[110px]
-            sm:w-[140px]
+            w-[150px]
+            sm:w-[160px]
             md:w-[190px]
             lg:w-[250px]
             xl:w-[400px]

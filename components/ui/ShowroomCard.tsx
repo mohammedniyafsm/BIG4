@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface ShowroomCardProps {
   images: string[];
+  mapUrl?: string;
   title: string;
   city: string;
   address: string;
@@ -19,6 +20,7 @@ interface ShowroomCardProps {
 
 export default function ShowroomCard({
   images,
+  mapUrl,
   title,
   city,
   address,
@@ -31,15 +33,17 @@ export default function ShowroomCard({
   const imageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const totalSlides = images.length + (mapUrl ? 1 : 0);
+
   const previousImage = () => {
     setCurrentImage((prev) =>
-      prev === 0 ? images.length - 1 : prev - 1
+      prev === 0 ? totalSlides - 1 : prev - 1
     );
   };
 
   const nextImage = () => {
     setCurrentImage((prev) =>
-      prev === images.length - 1 ? 0 : prev + 1
+      prev === totalSlides - 1 ? 0 : prev + 1
     );
   };
 
@@ -102,20 +106,33 @@ export default function ShowroomCard({
         ref={imageRef}
         className="relative aspect-[16/9] overflow-hidden bg-[#111111]"
       >
-        <Image
-          src={images[currentImage]}
-          alt={title}
-          fill
-          priority
-          className="object-cover"
-        />
+        {currentImage < images.length ? (
+          <Image
+            src={images[currentImage]}
+            alt={title}
+            fill
+            priority
+            className="object-cover"
+          />
+        ) : (
+          <iframe 
+            src={mapUrl}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="absolute inset-0"
+          ></iframe>
+        )}
 
         {/* Previous */}
 
-        {images.length > 1 && (
+        {totalSlides > 1 && (
           <button
             onClick={previousImage}
-            className="absolute left-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur transition hover:border-white hover:bg-black/40"
+            className="absolute left-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur transition hover:border-white hover:bg-black/40 z-10"
           >
             <ChevronLeft size={28} />
           </button>
@@ -123,10 +140,10 @@ export default function ShowroomCard({
 
         {/* Next */}
 
-        {images.length > 1 && (
+        {totalSlides > 1 && (
           <button
             onClick={nextImage}
-            className="absolute right-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur transition hover:border-white hover:bg-black/40"
+            className="absolute right-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/20 backdrop-blur transition hover:border-white hover:bg-black/40 z-10"
           >
             <ChevronRight size={28} />
           </button>
