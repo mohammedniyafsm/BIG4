@@ -30,12 +30,12 @@ export default function ScrollGallery() {
             {
                 src: "/animation-2/677276fd561b48d392692e32_h-g-image-1-min.png",
                 desktop: {
-                    top: "4%",
+                    top: "6%",
                     left: "23%",
                     width: "32vw",
                 },
                 mobile: {
-                    top: "3%",
+                    top: "10%",
                     left: "16%",
                     width: "38%",
                 },
@@ -44,12 +44,12 @@ export default function ScrollGallery() {
             {
                 src: "/animation-2/677276fd561b48d392692e34_h-g-image-2-min.png",
                 desktop: {
-                    top: "17%",
+                    top: "26%",
                     right: "12%",
                     width: "27vw",
                 },
                 mobile: {
-                    top: "8%",
+                    top: "27%",
                     right: "8%",
                     width: "31%",
                 },
@@ -58,12 +58,12 @@ export default function ScrollGallery() {
             {
                 src: "/animation-2/677276fd561b48d392692e35_h-g-image-3-min.png",
                 desktop: {
-                    top: "25%",
+                    top: "39%",
                     left: "6%",
                     width: "48vw",
                 },
                 mobile: {
-                    top: "13%",
+                    top: "45%",
                     left: "7%",
                     width: "46%",
                 },
@@ -72,12 +72,12 @@ export default function ScrollGallery() {
             {
                 src: "/animation-2/677276fd561b48d392692e33_h-g-image-4-min.png",
                 desktop: {
-                    top: "35%",
+                    top: "54%",
                     right: "6%",
                     width: "34vw",
                 },
                 mobile: {
-                    top: "17%",
+                    top: "58%",
                     right: "6%",
                     width: "32%",
                 },
@@ -86,12 +86,12 @@ export default function ScrollGallery() {
             {
                 src: "/animation-2/677276fd561b48d392692e31_h-g-image-5-min.png",
                 desktop: {
-                    top: "49%",
+                    top: "76%",
                     left: "31%",
                     width: "24vw",
                 },
                 mobile: {
-                    top: "22%",
+                    top: "75%",
                     left: "22%",
                     width: "28%",
                 },
@@ -176,7 +176,7 @@ export default function ScrollGallery() {
         >
             {/* Desktop */}
 
-            <div className="relative hidden lg:block h-[340vh]">
+            <div className="relative hidden lg:block h-[220vh]">
                 {images.map((item, index) => (
                     <div
                         key={index}
@@ -212,7 +212,7 @@ duration-700
 
             {/* Mobile */}
 
-            <div className="relative lg:hidden h-[240vh]">
+            <div className="relative lg:hidden h-[70vh]">
                 {images.map((item, index) => (
                     <div
                         key={index}

@@ -9,6 +9,7 @@ import Navbar from "@/components/component/Home/Navbar";
 import ScrollGallery from "@/components/component/Home/ScrollGallery";
 import ShowroomSection from "@/components/component/Home/ShowroomSection";
 import PageLoader from "@/components/ui/PageLoader";
+import ThreeDComponent from "@/components/ThreeDComponent";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         <Categories />
         <AboutSection />
         <ScrollGallery/>
+        <ThreeDComponent />
         <BrandsSection />
         <CatalogSection />
         <ShowroomSection />
