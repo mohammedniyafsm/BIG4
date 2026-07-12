@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
 
-export default function ScrollyCanvas({ heroRef }: { heroRef: React.RefObject<HTMLDivElement> }) {
+export default function ScrollyCanvas({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
