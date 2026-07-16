@@ -6,7 +6,15 @@ import NavLink from "./NavLink";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-export default function Navbar() {
+type NavbarProps = {
+  menuOpen: boolean;
+  setMenuOpen: (value: boolean) => void;
+}
+
+export default function Navbar({
+  menuOpen,
+  setMenuOpen
+}: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
   const isHidden = useRef(false);
@@ -211,6 +219,7 @@ export default function Navbar() {
               width={42}
               height={42}
               className="nav-menu h-10 w-10 xl:h-10 xl:w-10 pb-2 lg:pb-1 cursor-pointer"
+               onClick={() => setMenuOpen(true)}
             />
           </div>
         </nav>
@@ -246,6 +255,7 @@ export default function Navbar() {
               width={40}
               height={40}
               className="mobile-menu h-8 w-8 sm:h-10 sm:w-10 cursor-pointer"
+               onClick={() => setMenuOpen(true)}
             />
           </div>
         </div>

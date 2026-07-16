@@ -1,19 +1,50 @@
-"use client"
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import Image from "next/image";
 
 export default function ContactForm() {
+    const sectionRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        if (!sectionRef.current) return;
+
+        const ctx = gsap.context(() => {
+            const items = gsap.utils.toArray<HTMLElement>(".contact-animate");
+
+            gsap.set(items, {
+                opacity: 0,
+                y: 36,
+                scale: 0.98,
+            });
+
+            gsap.to(items, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.85,
+                stagger: 0.1,
+                ease: "power3.out",
+                delay: 0.3,
+            });
+        }, sectionRef);
+
+        return () => ctx.revert();
+    }, []);
+
     return (
-        <section className="pt-32 pb-20 bg-black text-white flex justify-center">
+        <section ref={sectionRef} className="pt-32 pb-20 bg-black text-white flex justify-center">
             <div className="w-full max-w-sm md:max-w-3xl lg:max-w-5xl px-4 md:px-0">
                 {/* Heading */}
-                <h1 className="text-4xl lg:text-4xl font-bold text-center tracking-wider">
+                <h1 className="contact-animate text-4xl lg:text-4xl font-bold text-center tracking-wider">
                     CONTACT
                 </h1>
 
                 <div className="md:flex md:py-8 md:gap-10 lg:gap-16 lg:justify-center md:items-start">
 
                     {/* Image */}
-                    <div className="mt-8 md:mt-10 md:w-1/2">
+                    <div className="contact-animate mt-8 md:mt-10 md:w-1/2">
                         <Image
                             src="/contact.webp"
                             alt="Contact"
@@ -24,7 +55,7 @@ export default function ContactForm() {
                     </div>
 
                     {/* Form */}
-                    <form className="mt-10 md:mt-10 md:w-1/2 flex flex-col gap-8">
+                    <form className="contact-animate mt-10 md:mt-10 md:w-1/2 flex flex-col gap-8">
                         {/* Full Name */}
                         <div>
                             <label className="block uppercase tracking-widest text-base md:text-lg font-semibold mb-3">

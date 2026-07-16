@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import FullscreenMenu from "@/components/component/Home/FullscreenMenu";
 import Navbar from "@/components/component/Home/Navbar";
+import PageLoader from "@/components/ui/PageLoader";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,6 +57,7 @@ const filters = [
 export default function OurBrands() {
     const sectionRef = useRef<HTMLDivElement>(null);
     const railRef = useRef<HTMLDivElement>(null);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -94,7 +97,9 @@ export default function OurBrands() {
     }, []);
 
     return (
-        <div className="bg-white min-h-screen w-full">
+        <>
+            <PageLoader />
+            <div className="bg-white min-h-screen w-full">
             <style>{`
       .no-scrollbar::-webkit-scrollbar {
         display: none;
@@ -105,7 +110,8 @@ export default function OurBrands() {
       }
     `}</style>
 
-            <Navbar />
+            <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+            <FullscreenMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
             <section ref={sectionRef} className="relative w-full">
                 {/* Heading */}
@@ -164,5 +170,6 @@ export default function OurBrands() {
                 </div>
             </section>
         </div>
+        </>
     );
 }
