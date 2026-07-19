@@ -30,80 +30,111 @@ const sections = [
 export default function Exper() {
   const heroRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const debug = false;
 
   useEffect(() => {
     if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
-      const headings = heroRef.current?.querySelectorAll("h1") || [];
-      const paragraphs = heroRef.current?.querySelectorAll("p") || [];
+      const heroHeading = heroRef.current?.querySelectorAll(".hero-heading");
+      const heroParagraph = heroRef.current?.querySelectorAll(".hero-paragraph");
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      });
-
-      tl.from(headings, {
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        ease: "power3.out",
-        stagger: 0.05,
-      })
-        .from(
-          paragraphs,
-          {
-            opacity: 0,
-            y: 24,
-            duration: 0.8,
-            ease: "power3.out",
-            stagger: 0.05,
-          },
-          "+=0.18"
-        );
-
-      sectionRefs.current.forEach((section, index) => {
-        if (!section) return;
-
-        const content = section.querySelector(".section-content");
-        const media = section.querySelector(".section-media");
-
-        const tlSection = gsap.timeline({
+      if (heroHeading && heroParagraph) {
+        const heroTimeline = gsap.timeline({
           scrollTrigger: {
-            trigger: section,
-            start: "top 85%",
+            trigger: heroRef.current,
+            start: "top 70%",
             once: true,
             toggleActions: "play none none none",
           },
         });
 
-        tlSection
+        heroTimeline
           .fromTo(
-            content,
+            heroHeading,
             { opacity: 0, y: 40 },
             {
               opacity: 1,
               y: 0,
               duration: 0.8,
               ease: "power3.out",
-              delay: index * 0.08,
+              stagger: 0.08,
             }
           )
           .fromTo(
+            heroParagraph,
+            { opacity: 0, y: 24 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              stagger: 0.05,
+            },
+            "-=" + 0.25
+          );
+      }
+
+      const isMobile = window.innerWidth < 768;
+
+      sectionRefs.current.forEach((section, index) => {
+        if (!section) return;
+
+        const content = section.querySelector(".section-content");
+        const heading = content?.querySelector("h1");
+        const paragraph = content?.querySelector("p");
+        const media = section.querySelector(".section-media");
+
+        if (!content || !heading || !paragraph) return;
+
+        const tlSection = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 52%",
+            once: true,
+            toggleActions: "play none none none",
+            markers: debug,
+          },
+        });
+
+        tlSection
+          .fromTo(
+            heading,
+            { opacity: 0, y: 40 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              delay: index * 0.05,
+            }
+          )
+          .fromTo(
+            paragraph,
+            { opacity: 0, y: 24 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power3.out",
+            },
+            "-=" + 0.25
+          );
+
+        if (isMobile && media) {
+          tlSection.fromTo(
             media,
-            { opacity: 0, y: 60, scale: 0.96 },
+            { opacity: 0, y: 40, scale: 0.97 },
             {
               opacity: 1,
               y: 0,
               scale: 1,
-              duration: 1,
+              duration: 0.8,
               ease: "power3.out",
             },
-            "-=" + 0.35
+            "+=0.12"
           );
+        }
       });
     }, heroRef);
 
@@ -115,20 +146,20 @@ export default function Exper() {
       <div ref={heroRef}>
         {/* mobile hero */}
         <div className="flex flex-col justify-center items-center text-center gap-4 py-20 md:hidden">
-          <h1 className="text-3xl font-black uppercase">
+          <h1 className="hero-heading text-3xl font-black uppercase">
             8+ <br /> years
           </h1>
-          <p className="text-xs px-4 uppercase font-black">
+          <p className="hero-paragraph text-xs px-4 uppercase font-black">
             Transforming Homes with Premium Surfaces & Bath Solutions.
           </p>
         </div>
 
         {/* desktop hero */}
         <div className="hidden md:flex flex-col justify-center items-center text-center gap-4 py-20">
-          <h1 className="font-black uppercase text-6xl lg:text-8xl xl:text-9xl">
+          <h1 className="hero-heading font-black uppercase text-6xl lg:text-8xl xl:text-9xl">
             8+ <br /> years
           </h1>
-          <p className="uppercase font-black mt-8 px-4 text-base lg:text-lg">
+          <p className="hero-paragraph uppercase font-black mt-8 px-4 text-base lg:text-lg">
             Transforming Homes with Premium Surfaces <br /> & Bath Solutions.
           </p>
         </div>
