@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function CatalogSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current || !titleRef.current || !buttonRef.current) return;
@@ -72,7 +74,8 @@ export default function CatalogSection() {
           CATALOG
         </h1>
 
-        <button
+        <Link
+          href="/products"
           ref={buttonRef}
           className="group relative mt-10 flex h-12 cursor-pointer items-center gap-4 overflow-hidden border border-[#3a3a3a] px-8 text-[9px] font-semibold uppercase tracking-[0.14em] text-white sm:mt-10 sm:text-[10px] lg:mt-14 lg:text-[11px]"
         >
@@ -85,7 +88,7 @@ export default function CatalogSection() {
           <span className="relative z-10 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-black">
             ↗
           </span>
-        </button>
+        </Link>
       </div>
     </section>
   );

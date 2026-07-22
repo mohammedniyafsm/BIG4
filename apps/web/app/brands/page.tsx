@@ -131,7 +131,7 @@ export default function OurBrands() {
       // Only create horizontal pinned scroll if items overflow the screen width
       if (scrollDistance > 30) {
         // Calibrated scroll duration for smooth responsive transition to next section
-        const pinDuration = Math.min(scrollDistance * 0.85, 2600);
+        const pinDuration = Math.min(scrollDistance * 2.5, 6000);
 
         anim = gsap.to(container, {
           x: () => -getScrollDistance(),
@@ -177,13 +177,13 @@ export default function OurBrands() {
         <FullscreenMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
         {/* ── Hero Section ── */}
-        <section className="px-6 pb-12 pt-40  md:pt-28 lg:pt-40 sm:px-8 max-w-3xl mx-auto text-center flex flex-col items-center justify-center min-h-[45vh]">
+        <section className="px-6 pb-12 pt-40  md:pt-28 lg:pt-40 sm:px-8 max-w-3xl mx-auto text-center flex flex-col items-center justify-center min-h-screen">
           <p className="hero-eyebrow mb-4 text-[8px] md:text-[10px] font-semibold uppercase tracking-[0.3em] text-[#6f5f4a] whitespace-nowrap">
             Elite Tiles & Sanitary Ware
           </p>
           <h1
             ref={titleRef}
-            className="text-5xl font-black uppercase leading-[1.05] tracking-tight text-[#121212] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+            className="text-4xl font-black uppercase leading-[1.05] tracking-tight text-[#121212] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
           >
             <span className="block overflow-hidden">
               <span className="inline-block title-line">Premium Brands,</span>
@@ -205,16 +205,16 @@ export default function OurBrands() {
               ))}
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <div className="mt-8 flex flex-col sm:flex-row w-full max-w-[280px] sm:max-w-none mx-auto items-center justify-center gap-4">
             <a
               href="#brand-grid"
-              className="hero-cta-btn rounded-full bg-[#121212] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-[#2b2b2b]"
+              className="hero-cta-btn flex w-full sm:w-auto items-center justify-center rounded-full bg-[#121212] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-[#2b2b2b]"
             >
               View collection
             </a>
             <Link
               href="/"
-              className="hero-cta-btn rounded-full border border-[#121212]/20 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#121212] transition hover:bg-[#121212] hover:text-white"
+              className="hero-cta-btn flex w-full sm:w-auto items-center justify-center rounded-full border border-[#121212]/20 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#121212] transition hover:bg-[#121212] hover:text-white"
             >
               Back home
             </Link>

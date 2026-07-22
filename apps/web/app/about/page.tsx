@@ -13,22 +13,22 @@ import PageLoader from "@/components/ui/PageLoader";
 
 
 export default function ABoutPage() {
-    const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    return (
-        <>
-            <PageLoader />
-            <div className="">
-                <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-                <FullscreenMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-                <div className="bg-[#1e1f22] min-w-screen min-h-screen">
-                    <Hero />
-                    <Experinces />
-                    <TimelineGallery />
-                    <Exper />
-                    <SiteFooter bgColor="bg-[#1e1f22]" textColor="text-white" />
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <PageLoader />
+      <div className="">
+        <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        <FullscreenMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        <div className="bg-black min-w-screen min-h-screen">
+          <Hero />
+          <Experinces />
+          <TimelineGallery />
+          <Exper />
+          <SiteFooter bgColor="bg-black" textColor="text-white" />
+        </div>
+      </div>
+    </>
+  );
 }

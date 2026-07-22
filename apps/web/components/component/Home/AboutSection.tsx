@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { siteConfig } from "@/lib/config/site";
+
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -61,7 +64,7 @@ export default function AboutSection() {
               <div className="overflow-hidden"><span className="block">TILES &</span></div>
               <div className="overflow-hidden"><span className="block">SANITARY</span></div>
               <div className="overflow-hidden"><span className="block">SINCE</span></div>
-              <div className="overflow-hidden"><span className="block">2017'</span></div>
+              <div className="overflow-hidden"><span className="block">{siteConfig.founded}'</span></div>
             </h2>
           </div>
 
@@ -73,10 +76,10 @@ export default function AboutSection() {
             </h3>
 
             <p className="mt-8 text-xs sm:text-xs font-inter w-[95%] sm:w-[300px] md:w-[360px] leading-6 text-[#9A9A9A]">
-              Since 2017, BIG<span className="font-inter">4</span>  Tiles & Sanitary has been helping homeowners, architects, builders, and interior designers create exceptional spaces with premium tiles, sanitaryware, bath fittings, and surface solutions. With a commitment to quality, trusted brands, and personalized service, we deliver products that combine lasting durability with timeless design for every project.
+              Since {siteConfig.founded}, BIG<span className="font-inter">4</span>  Tiles & Sanitary has been helping homeowners, architects, builders, and interior designers create exceptional spaces with premium tiles, sanitaryware, bath fittings, and surface solutions. With a commitment to quality, trusted brands, and personalized service, we deliver products that combine lasting durability with timeless design for every project.
             </p>
 
-            <button className="group relative mt-10 lg:mt-10 flex h-12 items-center justify-center gap-3 overflow-hidden border border-[#505050] px-6 uppercase text-sm font-medium tracking-[0.08em] text-white">
+            <Link href="/about" className="w-max group relative mt-10 lg:mt-10 flex h-12 items-center justify-center gap-3 overflow-hidden border border-[#505050] px-6 uppercase text-sm font-medium tracking-[0.08em] text-white">
 
               <span className="absolute inset-0 origin-left scale-x-0 bg-white transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:scale-x-100" />
 
@@ -89,7 +92,7 @@ export default function AboutSection() {
                 <path d="M8 7h9v9" />
               </svg>
 
-            </button>
+            </Link>
 
           </div>
 

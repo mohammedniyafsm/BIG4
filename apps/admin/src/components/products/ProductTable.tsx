@@ -7,9 +7,10 @@ interface ProductTableProps {
     products: ProductListItem[];
     onStockClick: (product: ProductListItem) => void;
     onDeleteClick: (product: ProductListItem) => void;
+    onFeatureToggle: (product: ProductListItem) => void;
 }
 
-export function ProductTable({ products, onStockClick, onDeleteClick }: ProductTableProps) {
+export function ProductTable({ products, onStockClick, onDeleteClick, onFeatureToggle }: ProductTableProps) {
     if (products.length === 0) {
         return (
             <div className="saas-card" style={{ textAlign: "center", padding: "60px 20px" }}>
@@ -69,7 +70,10 @@ export function ProductTable({ products, onStockClick, onDeleteClick }: ProductT
                                             )}
                                         </div>
                                         <div>
-                                            <div style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>{product.name}</div>
+                                            <div style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>
+                                                {product.name}
+                                                {product.featured && <span style={{ color: "var(--warning)", marginLeft: 6 }} title="Featured on homepage">★</span>}
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -126,6 +130,22 @@ export function ProductTable({ products, onStockClick, onDeleteClick }: ProductT
 
                                 <td>
                                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                                        <button
+                                            onClick={() => onFeatureToggle(product)}
+                                            style={{
+                                                padding: "6px 12px",
+                                                borderRadius: "var(--radius-pill)",
+                                                border: "1px solid var(--border-default)",
+                                                background: "var(--bg-canvas)",
+                                                color: product.featured ? "var(--warning)" : "var(--text-secondary)",
+                                                fontSize: 13,
+                                                fontWeight: 600,
+                                                cursor: "pointer",
+                                            }}
+                                            title={product.featured ? "Remove from featured" : "Feature on homepage"}
+                                        >
+                                            {product.featured ? "Unfeature" : "Feature"}
+                                        </button>
                                         <Link
                                             href={`/admin/products/${product.id}`}
                                             style={{
@@ -178,7 +198,10 @@ export function ProductTable({ products, onStockClick, onDeleteClick }: ProductT
                             </div>
                             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                                    <div style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>{product.name}</div>
+                                    <div style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>
+                                        {product.name}
+                                        {product.featured && <span style={{ color: "var(--warning)", marginLeft: 4 }} title="Featured on homepage">★</span>}
+                                    </div>
                                     <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text-primary)" }}>₹{product.price.toLocaleString("en-IN")}</div>
                                 </div>
                                 <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2, fontFamily: "var(--font-mono)" }}>{product.sku}</div>
@@ -193,8 +216,9 @@ export function ProductTable({ products, onStockClick, onDeleteClick }: ProductT
                             <span className={`badge ${product.isActive ? "badge-active" : "badge-archived"}`}>{product.isActive ? "Active" : "Archived"}</span>
                         </div>
                         <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                            <button onClick={() => onFeatureToggle(product)} style={{ flex: 1, textAlign: "center", padding: "8px", borderRadius: "var(--radius-pill)", border: "1px solid var(--border-default)", background: "var(--bg-canvas)", fontSize: 13, fontWeight: 600, cursor: "pointer", color: product.featured ? "var(--warning)" : "var(--text-secondary)" }}>{product.featured ? "Unfeature" : "Feature"}</button>
                             <Link href={`/admin/products/${product.id}`} style={{ flex: 1, textAlign: "center", padding: "8px", borderRadius: "var(--radius-pill)", border: "1px solid var(--border-default)", background: "var(--bg-card)", fontSize: 13, fontWeight: 600, textDecoration: "none", color: "var(--text-primary)" }}>Edit</Link>
-                            <button onClick={() => onDeleteClick(product)} style={{ flex: 1, textAlign: "center", padding: "8px", borderRadius: "var(--radius-pill)", border: "1px solid var(--danger-soft)", color: "var(--danger)", background: "var(--danger-soft)", fontSize: 13, fontWeight: 600 }}>Delete</button>
+                            <button onClick={() => onDeleteClick(product)} style={{ flex: 1, textAlign: "center", padding: "8px", borderRadius: "var(--radius-pill)", border: "1px solid var(--danger-soft)", color: "var(--danger)", background: "var(--danger-soft)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Delete</button>
                         </div>
                     </div>
                 ))}

@@ -1,5 +1,5 @@
-import { NextRequest } from "next/server";
-import { verifyAccessToken, verifyRefreshToken } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+import { verifyAccessToken, verifyRefreshToken, generateAccessToken } from "@/lib/auth";
 import { getAccessToken, getRefreshToken } from "@/lib/cookies";
 import { uploadImage } from "@/lib/cloudinary";
 
@@ -12,13 +12,28 @@ import { uploadImage } from "@/lib/cloudinary";
  */
 export async function POST(req: NextRequest) {
     try {
-        // Auth check (allow if either token is valid, so they don't get stuck if access token expires during a session)
-        const accessToken = await getAccessToken();
-        const refreshToken = await getRefreshToken();
-        
-        const isAuth = (accessToken && verifyAccessToken(accessToken)) || (refreshToken && verifyRefreshToken(refreshToken));
-        
-        if (!isAuth) {
+        let accessToken = await getAccessToken();
+        let authPayload = accessToken ? verifyAccessToken(accessToken) : null;
+        let newAccessTokenSet = false;
+
+        // If access token is invalid/expired, try refresh token exchange
+        if (!authPayload) {
+            const refreshToken = await getRefreshToken();
+            const refreshPayload = refreshToken ? verifyRefreshToken(refreshToken) : null;
+
+            if (refreshPayload) {
+                // Re-mint a fresh access token using existing generateAccessToken function
+                const newAccessToken = generateAccessToken({
+                    userId: refreshPayload.userId,
+                    email: "admin@big4.com", // Payload standard
+                });
+                accessToken = newAccessToken;
+                authPayload = verifyAccessToken(newAccessToken);
+                newAccessTokenSet = true;
+            }
+        }
+
+        if (!authPayload) {
             return Response.json(
                 { success: false, message: "Authentication required", data: null },
                 { status: 401 }
@@ -61,11 +76,23 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        return Response.json({
+        const res = NextResponse.json({
             success: true,
             message: "Image uploaded successfully",
             data: { url: result.url, publicId: result.publicId },
         });
+
+        if (newAccessTokenSet && accessToken) {
+            res.cookies.set("access_token", accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                path: "/",
+                maxAge: 15 * 60,
+            });
+        }
+
+        return res;
     } catch (error) {
         console.error("Upload error:", error);
         return Response.json(

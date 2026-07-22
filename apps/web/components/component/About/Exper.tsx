@@ -11,191 +11,193 @@ if (typeof window !== "undefined") {
 
 const sections = [
   {
+    step: "01",
     title: "INSPIRE",
     src: "/44.webp",
-    copy: "Discover collections that combine timeless design, exceptional craftsmanship, and lasting quality. From elegant tiles to modern sanitaryware and bath fittings, every product is selected to elevate your living spaces.",
+    copy: "Handpicked surface and bath collections combining timeless architectural design with modern craftsmanship.",
   },
   {
+    step: "02",
     title: "SELECT",
     src: "/45.webp",
-    copy: "Our experts help you choose products that complement your style, budget, and project requirements. With personalized guidance and trusted recommendations, we make creating beautiful spaces effortless.",
+    copy: "Expert guidance to help choose materials tailored to your aesthetic, project specifications, and budget.",
   },
   {
+    step: "03",
     title: "COMPLETE",
     src: "/46.jpg",
-    copy: "Every project deserves dependable service. From consultation and product selection to timely delivery and after-sales support, BIG4 is committed to making your journey smooth from start to finish.",
+    copy: "End-to-end service from personalized consultation and product selection to reliable delivery and support.",
   },
 ];
 
 export default function Exper() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const debug = false;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const stickyCardsRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    if (!heroRef.current) return;
+    if (!containerRef.current || !stickyCardsRef.current) return;
 
     const ctx = gsap.context(() => {
-      const heroHeading = heroRef.current?.querySelectorAll(".hero-heading");
-      const heroParagraph = heroRef.current?.querySelectorAll(".hero-paragraph");
-
-      if (heroHeading && heroParagraph) {
-        const heroTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top 70%",
-            once: true,
-            toggleActions: "play none none none",
-          },
-        });
-
-        heroTimeline
-          .fromTo(
-            heroHeading,
-            { opacity: 0, y: 40 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              ease: "power3.out",
-              stagger: 0.08,
-            }
-          )
-          .fromTo(
-            heroParagraph,
-            { opacity: 0, y: 24 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              ease: "power3.out",
-              stagger: 0.05,
-            },
-            "-=" + 0.25
-          );
-      }
-
-      const isMobile = window.innerWidth < 768;
-
-      sectionRefs.current.forEach((section, index) => {
-        if (!section) return;
-
-        const content = section.querySelector(".section-content");
-        const heading = content?.querySelector("h1");
-        const paragraph = content?.querySelector("p");
-        const media = section.querySelector(".section-media");
-
-        if (!content || !heading || !paragraph) return;
-
-        const tlSection = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top 52%",
-            once: true,
-            toggleActions: "play none none none",
-            markers: debug,
-          },
-        });
-
-        tlSection
-          .fromTo(
-            heading,
-            { opacity: 0, y: 40 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              ease: "power3.out",
-              delay: index * 0.05,
-            }
-          )
-          .fromTo(
-            paragraph,
-            { opacity: 0, y: 24 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              ease: "power3.out",
-            },
-            "-=" + 0.25
-          );
-
-        if (isMobile && media) {
-          tlSection.fromTo(
-            media,
-            { opacity: 0, y: 40, scale: 0.97 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.8,
-              ease: "power3.out",
-            },
-            "+=0.12"
-          );
-        }
+      // Header entrance animations
+      gsap.from(".hero-heading", {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 70%",
+          once: true,
+        },
       });
-    }, heroRef);
+
+      gsap.from(".hero-paragraph", {
+        y: 24,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        delay: 0.2,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 70%",
+          once: true,
+        },
+      });
+
+      // Sticky Stacked Cards ScrollTrigger Animation
+      const cardElements = cardRefs.current.filter(Boolean);
+      const totalCards = cardElements.length;
+
+      if (cardElements.length > 0) {
+        // Set initial card states: card 0 visible, subsequent cards start below
+        gsap.set(cardElements[0], { y: "0%", scale: 1, opacity: 1, zIndex: 1 });
+
+        for (let i = 1; i < totalCards; i++) {
+          if (!cardElements[i]) continue;
+          gsap.set(cardElements[i], { y: "100%", scale: 1, opacity: 1, zIndex: i + 1 });
+        }
+
+        const scrollTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: stickyCardsRef.current,
+            start: "top top+=100",
+            end: `+=${window.innerHeight * (totalCards - 0.5)}`,
+            pin: true,
+            scrub: 0.6,
+            pinSpacing: true,
+          },
+        });
+
+        for (let i = 0; i < totalCards - 1; i++) {
+          const currentCard = cardElements[i];
+          const nextCard = cardElements[i + 1];
+          const position = i;
+
+          if (!currentCard || !nextCard) continue;
+
+          // Scale down current card as next card slides up
+          scrollTimeline.to(
+            currentCard,
+            {
+              scale: 0.9,
+              opacity: 0.4,
+              duration: 1,
+              ease: "none",
+            },
+            position
+          );
+
+          // Slide up next card
+          scrollTimeline.to(
+            nextCard,
+            {
+              y: "0%",
+              duration: 1,
+              ease: "none",
+            },
+            position
+          );
+
+          // Animate image zoom on enter
+          const nextMedia = nextCard.querySelector(".card-image");
+          if (nextMedia) {
+            scrollTimeline.fromTo(
+              nextMedia,
+              { scale: 1.12 },
+              { scale: 1, duration: 1, ease: "none" },
+              position
+            );
+          }
+        }
+      }
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <>
-      <div ref={heroRef}>
-        {/* mobile hero */}
-        <div className="flex flex-col justify-center items-center text-center gap-4 py-20 md:hidden">
-          <h1 className="hero-heading text-3xl font-black uppercase">
-            8+ <br /> years
+    <section
+      ref={containerRef}
+      className="w-full bg-black border-b border-white/10 pt-20 sm:pt-28 pb-16 px-4 sm:px-6 md:px-10 overflow-hidden"
+    >
+      <div className="w-full max-w-[96%] lg:max-w-[94%] xl:max-w-7xl mx-auto flex flex-col items-center">
+        {/* Section Header */}
+        <div className="text-center flex flex-col items-center mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 mb-6">
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+              03 / Our Philosophy
+            </span>
+          </div>
+
+          <h1 className="hero-heading font-black uppercase text-5xl sm:text-7xl md:text-8xl tracking-tight text-white leading-none mb-4">
+            8+ Years
           </h1>
-          <p className="hero-paragraph text-xs px-4 uppercase font-black">
+          <p className="hero-paragraph text-xs sm:text-sm md:text-base font-light text-gray-300 max-w-lg leading-relaxed uppercase tracking-wider">
             Transforming Homes with Premium Surfaces & Bath Solutions.
           </p>
         </div>
 
-        {/* desktop hero */}
-        <div className="hidden md:flex flex-col justify-center items-center text-center gap-4 py-20">
-          <h1 className="hero-heading font-black uppercase text-6xl lg:text-8xl xl:text-9xl">
-            8+ <br /> years
-          </h1>
-          <p className="hero-paragraph uppercase font-black mt-8 px-4 text-base lg:text-lg">
-            Transforming Homes with Premium Surfaces <br /> & Bath Solutions.
-          </p>
-        </div>
-
-        {/* sections */}
-        <div className="py-16 flex flex-col gap-16 md:gap-28 md:px-6 lg:px-16">
+        {/* Sticky Cards Stack Container */}
+        <div
+          ref={stickyCardsRef}
+          className="relative w-full max-w-full h-[70vh] sm:h-[75vh] md:h-[75vh] flex items-center justify-center"
+        >
           {sections.map((section, index) => {
-            const imageLeft = index % 2 === 0;
+            const isEven = index % 2 === 0;
 
             return (
               <div
                 key={section.title}
                 ref={(el) => {
-                  sectionRefs.current[index] = el;
+                  cardRefs.current[index] = el;
                 }}
-                className={`px-6 md:px-0 flex flex-col md:items-center md:gap-20 lg:gap-28 xl:gap-40 ${
-                  imageLeft ? "md:flex-row-reverse" : "md:flex-row"
+                className={`absolute inset-0 w-full h-full bg-black flex flex-col items-center justify-between gap-6 md:gap-12 px-4 sm:px-8 py-6 sm:py-8 overflow-hidden ${
+                  isEven ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
-                <div className="section-content md:w-1/2">
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-black">
+                {/* Text Content */}
+                <div className="w-full md:w-1/2 flex flex-col justify-center text-left">
+                  <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#777] mb-2 sm:mb-4">
+                    Phase {section.step}
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight mb-4">
                     {section.title}
-                  </h1>
-                  <p className="font-inter text-xs mt-4 md:mt-6 lg:mt-8 leading-5 text-[#8e8e8e] md:w-[70%]">
+                  </h2>
+                  <p className="font-inter text-xs sm:text-sm md:text-base leading-relaxed text-gray-300 max-w-md">
                     {section.copy}
                   </p>
                 </div>
 
-                <div className="section-media relative mt-6 md:mt-0 md:w-1/2 h-62.5 md:h-110 lg:h-135 xl:h-150 w-full overflow-hidden">
+                {/* Media Image */}
+                <div className="relative w-full md:w-1/2 h-52 sm:h-64 md:h-full rounded-2xl overflow-hidden">
                   <Image
                     src={section.src}
                     alt={section.title}
                     fill
                     priority
                     sizes="(max-width: 767px) 100vw, 50vw"
-                    className="object-cover"
+                    className="card-image object-cover"
                   />
                 </div>
               </div>
@@ -203,6 +205,6 @@ export default function Exper() {
           })}
         </div>
       </div>
-    </>
+    </section>
   );
 }

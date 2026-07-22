@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -64,7 +66,8 @@ export default function Categories() {
               "
             >
               {row.map((item) => (
-                <button
+                <Link
+                  href={`/products?search=${encodeURIComponent(item)}`}
                   key={item}
                   className="
                     group
@@ -73,6 +76,10 @@ export default function Categories() {
                     cursor-pointer
                     h-10
                     lg:h-11
+
+                    inline-flex
+                    items-center
+                    justify-center
 
                     rounded-full
 
@@ -134,7 +141,7 @@ export default function Categories() {
                   >
                     {item}
                   </span>
-                </button>
+                </Link>
               ))}
             </div>
           ))}

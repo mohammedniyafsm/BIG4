@@ -1,11 +1,8 @@
-export async function triggerStorefrontRevalidation(tags: string[]) {
-  const storefrontUrl = process.env.STOREFRONT_URL;
-  const secret = process.env.REVALIDATE_SECRET;
+import { env } from "@/config/env";
 
-  if (!storefrontUrl || !secret) {
-    console.warn("Skipping storefront revalidation: STOREFRONT_URL or REVALIDATE_SECRET missing");
-    return;
-  }
+export async function triggerStorefrontRevalidation(tags: string[]) {
+  const storefrontUrl = env.STOREFRONT_URL;
+  const secret = env.REVALIDATE_SECRET;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second max timeout

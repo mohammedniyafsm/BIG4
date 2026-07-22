@@ -78,6 +78,7 @@ export default async function EditProductPage({ params }: PageProps) {
                     images: product.images,
                     categoryId: product.categoryId,
                     isActive: product.isActive,
+                    featured: product.featured,
                     priceUnit: product.priceUnit,
                     salePrice: product.salePrice ? Number(product.salePrice) : null,
                     color: product.color,

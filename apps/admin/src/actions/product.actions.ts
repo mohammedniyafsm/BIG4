@@ -41,6 +41,7 @@ export async function createProductAction(formData: FormData): Promise<ActionRes
             size: (formData.get("size") as string) || undefined,
             coveragePerBox: formData.has("coveragePerBox") && formData.get("coveragePerBox") ? parseFloat(formData.get("coveragePerBox") as string) : undefined,
             highlights: formData.has("highlights") ? JSON.parse(formData.get("highlights") as string) : undefined,
+            featured: formData.has("featured") ? formData.get("featured") === "true" : undefined,
         };
 
         const parsed = createProductSchema.safeParse(raw);
@@ -104,6 +105,7 @@ export async function updateProductAction(
             size: formData.has("size") ? (formData.get("size") as string || undefined) : undefined,
             coveragePerBox: formData.has("coveragePerBox") && formData.get("coveragePerBox") ? parseFloat(formData.get("coveragePerBox") as string) : undefined,
             highlights: formData.has("highlights") ? JSON.parse(formData.get("highlights") as string) : undefined,
+            featured: formData.has("featured") ? formData.get("featured") === "true" : undefined,
         };
 
         const parsed = updateProductSchema.safeParse(raw);
@@ -148,6 +150,28 @@ export async function archiveProductAction(productId: string): Promise<ActionRes
         await triggerStorefrontRevalidation(["products", `product-${result.data?.slug || productId}`]);
 
         return { success: true, message: "Product archived", data: null };
+    } catch {
+        return { success: false, message: "Something went wrong", data: null };
+    }
+}
+
+/**
+ * Server Action: Toggle featured status of a product.
+ */
+export async function toggleProductFeaturedAction(productId: string): Promise<ActionResult> {
+    try {
+        await requireAuth();
+
+        const result = await productService.toggleFeatured(productId);
+        if (!result.success) {
+            return { success: false, message: result.message, data: null };
+        }
+
+        revalidatePath("/admin/products");
+        revalidatePath("/admin");
+        await triggerStorefrontRevalidation(["products", `product-${result.data?.slug || productId}`]);
+
+        return { success: true, message: result.message, data: null };
     } catch {
         return { success: false, message: "Something went wrong", data: null };
     }

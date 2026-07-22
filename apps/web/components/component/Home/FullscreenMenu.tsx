@@ -72,11 +72,6 @@ export default function FullscreenMenu({
                     y: 80,
                 });
 
-                gsap.set(".catalog-btn", {
-                    opacity: 0,
-                    y: 25,
-                    scale: .95,
-                });
 
                 const tl = gsap.timeline();
 
@@ -120,27 +115,12 @@ export default function FullscreenMenu({
                     );
                 }
 
-                tl.to(
-                    ".catalog-btn",
-                    {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        duration: .45,
-                        ease: "back.out(1.6)",
-                    },
-                    "-=.25"
-                );
+
             } else {
                 document.body.style.overflow = "";
 
                 const tl = gsap.timeline();
 
-                tl.to(".catalog-btn", {
-                    opacity: 0,
-                    y: 20,
-                    duration: .2,
-                });
 
                 tl.to(
                     ".menu-item",

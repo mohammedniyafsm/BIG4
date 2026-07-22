@@ -88,6 +88,7 @@ model Product {
   stock          Int            @default(0)
   imageUrl       String?
   isActive       Boolean        @default(true)
+  featured       Boolean        @default(false)
   categoryId     String
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -108,6 +109,7 @@ model Product {
   @@index([brandId])
   @@index([name])
   @@index([isActive])
+  @@index([featured])
   @@index([stock])
   @@map("products")
 }
@@ -151,4 +153,16 @@ model Offer {
 
   @@index([isActive, displayOrder])
   @@map("offers")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  interest  String?
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@map("leads")
 }

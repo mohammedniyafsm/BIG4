@@ -7,19 +7,16 @@ import ShowroomCard from "@/components/ui/ShowroomCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import { siteConfig } from "@/lib/config/site";
+
 const showroom = {
   images: ["/1.png"],
-  mapUrl: "https://maps.google.com/maps?q=Sarah+Commercial+Complex,+Mangalore+-+Mysore+Hwy,+opp.+KSRTC+Bus+Stand,+Jattipalla,+Sullia,+Karnataka+574239&t=&z=13&ie=UTF8&iwloc=&output=embed",
-
-  title: "BIG4 Experience Center",
-
-  city: "Bangalore",
-
-  address: "MG Road, Bengaluru, Karnataka 560001",
-
-  phone: "+91 98765 43210",
-
-  email: "info@big4group.com",
+  mapUrl: siteConfig.googleMapsEmbed,
+  title: `${siteConfig.name} Experience Center`,
+  city: siteConfig.address.city,
+  address: `${siteConfig.address.building}, ${siteConfig.address.landmark}, ${siteConfig.address.area}, ${siteConfig.address.city} - ${siteConfig.address.postalCode}`,
+  phone: siteConfig.contact.phone,
+  email: siteConfig.contact.email,
 };
 
 export default function ShowroomSection() {

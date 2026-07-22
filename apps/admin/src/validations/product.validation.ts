@@ -42,6 +42,7 @@ export const createProductSchema = z.object({
     highlights: z.array(
         z.string().trim().min(1, "Highlight cannot be empty").max(120, "Highlight max 120 characters")
     ).max(10, "Cannot exceed 10 highlights").default([]),
+    featured: z.boolean().default(false),
 }).superRefine((data, ctx) => {
     if (data.salePrice !== undefined && data.salePrice >= data.price) {
         ctx.addIssue({
@@ -74,6 +75,7 @@ export const updateProductSchema = z.object({
     highlights: z.array(
         z.string().trim().min(1, "Highlight cannot be empty").max(120, "Highlight max 120 characters")
     ).max(10, "Cannot exceed 10 highlights").optional(),
+    featured: z.boolean().optional(),
 }).superRefine((data, ctx) => {
     // If salePrice is set, we need to make sure we have a price to compare to, or at least it's less than existing price
     // But since it's an update payload, price might not be provided in the payload if it hasn't changed.

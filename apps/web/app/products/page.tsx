@@ -6,6 +6,7 @@ import { SortSelect } from "@/components/features/products/SortSelect";
 import { ActiveFilterChips } from "@/components/features/products/ActiveFilterChips";
 import { ProductPagination } from "@/components/features/products/ProductPagination";
 import { MobileProductControls } from "@/components/features/products/MobileProductControls";
+import { ProductHero } from "@/components/features/products/ProductHero";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -64,34 +65,21 @@ export default async function ProductsPage({
   return (
     <div className="light-theme bg-background text-foreground min-h-screen">
       <Navbar theme="light" />
-      <main className="pt-28 pb-20">
+      
+      {/* Hero Section */}
+      <ProductHero />
+
+      <main className="pb-20">
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 xl:px-16">
           <FadeIn>
-            {/* Breadcrumbs */}
-            <Breadcrumb className="mb-8">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Products</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
 
-            {/* Page Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-8">
-              <div>
-                <h1 className="text-3xl md:text-5xl lg:text-page-title font-medium tracking-tight mb-2 uppercase">
-                  Our Products
-                </h1>
-                <p className="text-sm md:text-base text-muted-foreground">
-                  {productsRes?.pagination.total 
-                    ? `Showing ${(page - 1) * limit + 1}–${Math.min(page * limit, productsRes.pagination.total)} of ${productsRes.pagination.total} products`
-                    : "Browse our collection"}
-                </p>
-              </div>
+            {/* Filter and Search Bar */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-border/40 pb-6">
+              <p className="text-sm text-muted-foreground font-medium">
+                {productsRes?.pagination.total 
+                  ? `Showing ${(page - 1) * limit + 1}–${Math.min(page * limit, productsRes.pagination.total)} of ${productsRes.pagination.total} products`
+                  : "Browse our collection"}
+              </p>
               
               <div className="flex flex-col w-full md:w-auto sm:flex-row items-center gap-3">
                 <div className="w-full sm:w-auto sticky top-[4.5rem] z-40 lg:static bg-background/95 backdrop-blur py-2 lg:py-0">

@@ -1,4 +1,5 @@
 import { productRepository } from "@/repositories/product.repository";
+import { prisma } from "@/lib/prisma";
 import { generateUniqueSlug } from "@/lib/slugify";
 import type { ProductListParams, PaginatedResult, ProductListItem } from "@/types/admin.types";
 import type { CreateProductInput, UpdateProductInput } from "@/validations/product.validation";
@@ -73,6 +74,7 @@ export const productService = {
             isActive: p.isActive,
             categoryId: p.categoryId,
             categoryName: p.category.name,
+            featured: p.featured,
             createdAt: p.createdAt,
         }));
 
@@ -127,6 +129,7 @@ export const productService = {
             size: input.size ?? null,
             coveragePerBox: input.coveragePerBox ?? null,
             highlights: input.highlights ?? [],
+            featured: input.featured ?? false,
         };
 
         // Connect brand if provided
@@ -134,23 +137,27 @@ export const productService = {
             createData.brand = { connect: { id: input.brandId } };
         }
 
-        const product = await productRepository.create(createData);
+        const product = await prisma.$transaction(async (tx) => {
+            const created = await tx.product.create({ data: createData });
 
-        // Create product images if provided
-        if (input.images && input.images.length > 0) {
-            await productRepository.createImages(
-                product.id,
-                input.images.map((img, i) => ({
-                    url: img.url,
-                    publicId: img.publicId,
-                    displayOrder: img.displayOrder ?? i,
-                }))
-            );
-            // Set first image as thumbnail if no imageUrl provided
-            if (!input.imageUrl && input.images.length > 0) {
-                await productRepository.update(product.id, { imageUrl: input.images[0].url });
+            if (input.images && input.images.length > 0) {
+                await tx.productImage.createMany({
+                    data: input.images.map((img, i) => ({
+                        productId: created.id,
+                        url: img.url,
+                        publicId: img.publicId,
+                        displayOrder: img.displayOrder ?? i,
+                    })),
+                });
+                if (!input.imageUrl) {
+                    await tx.product.update({
+                        where: { id: created.id },
+                        data: { imageUrl: input.images[0].url },
+                    });
+                }
             }
-        }
+            return created;
+        });
 
         return { success: true as const, message: "Product created successfully", data: product };
     },
@@ -195,6 +202,7 @@ export const productService = {
         if (input.size !== undefined) data.size = input.size;
         if (input.coveragePerBox !== undefined) data.coveragePerBox = input.coveragePerBox;
         if (input.highlights !== undefined) data.highlights = input.highlights;
+        if (input.featured !== undefined) data.featured = input.featured;
 
         // Handle brand connection/disconnection
         if (input.brandId !== undefined) {
@@ -212,26 +220,33 @@ export const productService = {
             data.category = { connect: { id: input.categoryId } };
         }
 
-        const product = await productRepository.update(id, data);
+        const product = await prisma.$transaction(async (tx) => {
+            const updated = await tx.product.update({
+                where: { id },
+                data,
+            });
 
-        // Handle images: replace all images if provided
-        if (input.images !== undefined) {
-            await productRepository.deleteImages(id);
-            if (input.images.length > 0) {
-                await productRepository.createImages(
-                    id,
-                    input.images.map((img, i) => ({
-                        url: img.url,
-                        publicId: img.publicId,
-                        displayOrder: img.displayOrder ?? i,
-                    }))
-                );
-                // Update thumbnail to first image
-                if (!input.imageUrl) {
-                    await productRepository.update(id, { imageUrl: input.images[0].url });
+            if (input.images !== undefined) {
+                await tx.productImage.deleteMany({ where: { productId: id } });
+                if (input.images.length > 0) {
+                    await tx.productImage.createMany({
+                        data: input.images.map((img, i) => ({
+                            productId: id,
+                            url: img.url,
+                            publicId: img.publicId,
+                            displayOrder: img.displayOrder ?? i,
+                        })),
+                    });
+                    if (!input.imageUrl) {
+                        await tx.product.update({
+                            where: { id },
+                            data: { imageUrl: input.images[0].url },
+                        });
+                    }
                 }
             }
-        }
+            return updated;
+        });
 
         return { success: true as const, message: "Product updated successfully", data: product };
     },
@@ -250,6 +265,19 @@ export const productService = {
     },
 
     /**
+     * Toggle featured status of a product.
+     */
+    async toggleFeatured(id: string) {
+        const existing = await productRepository.findById(id);
+        if (!existing) {
+            return { success: false as const, message: "Product not found", data: null };
+        }
+
+        const updated = await productRepository.update(id, { featured: !existing.featured });
+        return { success: true as const, message: updated.featured ? "Product featured" : "Product unfeatured", data: updated };
+    },
+
+    /**
      * Archive a product (soft delete).
      */
     async archive(id: string) {
@@ -259,7 +287,7 @@ export const productService = {
         }
 
         await productRepository.archive(id);
-        return { success: true as const, message: "Product archived successfully", data: null };
+        return { success: true as const, message: "Product archived successfully", data: existing };
     },
 
     /**
@@ -272,7 +300,7 @@ export const productService = {
         }
 
         await productRepository.restore(id);
-        return { success: true as const, message: "Product restored successfully", data: null };
+        return { success: true as const, message: "Product restored successfully", data: existing };
     },
 
     /**
@@ -286,6 +314,6 @@ export const productService = {
 
         // Images cascade-delete via Prisma schema
         await productRepository.delete(id);
-        return { success: true as const, message: "Product deleted successfully", data: null };
+        return { success: true as const, message: "Product deleted successfully", data: existing };
     },
 };

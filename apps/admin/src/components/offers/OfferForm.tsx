@@ -179,7 +179,7 @@ export function OfferForm({ initialData }: OfferFormProps) {
                             <select
                                 id="linkType"
                                 value={linkType}
-                                onChange={(e) => setLinkType(e.target.value)}
+                                onChange={(e) => setLinkType(e.target.value as any)}
                                 style={{ ...getInputStyle(false), paddingRight: 32, appearance: "none" }}
                             >
                                 <option value="NONE">No link (Not Clickable)</option>
@@ -209,7 +209,7 @@ export function OfferForm({ initialData }: OfferFormProps) {
                                         "e.g. premium-floor-tile"
                                     }
                                     style={getInputStyle(!!errors.linkValue)}
-                                    required={linkType !== "NONE"}
+                                    required={(linkType as string) !== "NONE"}
                                 />
                                 {errors.linkValue && <span style={{ display: "block", marginTop: 4, fontSize: 12, color: "var(--danger)" }}>{errors.linkValue[0]}</span>}
                                 

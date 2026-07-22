@@ -30,10 +30,20 @@ export function ProductGrid({ products }: { products: Product[] }) {
     );
   }
 
+  const isFew = products.length > 0 && products.length < 3;
+
   return (
-    <FadeInStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <FadeInStagger 
+      className={isFew 
+        ? "grid grid-cols-1 sm:flex sm:flex-wrap sm:justify-center gap-6" 
+        : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      }
+    >
       {products.map((product) => (
-        <FadeInItem key={product.id}>
+        <FadeInItem 
+          key={product.id} 
+          className={isFew ? "w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] sm:max-w-sm" : ""}
+        >
           <ProductCard product={product} />
         </FadeInItem>
       ))}

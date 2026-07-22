@@ -26,7 +26,8 @@ async function run() {
             salePrice: 90.5,
             coveragePerBox: 1.44,
             images: [],
-            highlights: ["test highlight"]
+            highlights: ["test highlight"],
+            featured: false,
         });
         console.log("Success:", result);
     } catch (e) {

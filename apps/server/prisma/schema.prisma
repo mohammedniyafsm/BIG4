@@ -88,6 +88,7 @@ model Product {
   stock          Int            @default(0)
   imageUrl       String?
   isActive       Boolean        @default(true)
+  featured       Boolean        @default(false)
   categoryId     String
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -108,6 +109,7 @@ model Product {
   @@index([brandId])
   @@index([name])
   @@index([isActive])
+  @@index([featured])
   @@index([stock])
   @@map("products")
 }
@@ -123,4 +125,32 @@ model ProductImage {
 
   @@index([productId])
   @@map("product_images")
+}
+
+enum OfferLinkType {
+  NONE
+  WHATSAPP
+  EXTERNAL_URL
+  PRODUCT
+  CATEGORY
+}
+
+model Offer {
+  id                String        @id @default(cuid())
+  title             String
+  description       String?       @db.Text
+  discountText      String?
+  bannerImage       String
+  bannerImageMobile String?
+  linkType          OfferLinkType @default(NONE)
+  linkValue         String?
+  displayOrder      Int           @default(0)
+  isActive          Boolean       @default(true)
+  startDate         DateTime?
+  endDate           DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([isActive, displayOrder])
+  @@map("offers")
 }

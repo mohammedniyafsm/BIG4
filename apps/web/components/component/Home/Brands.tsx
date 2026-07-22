@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import BrandCard from "@/components/ui/BrandCard";
 
 // const brands = [
@@ -71,7 +73,7 @@ export default function BrandsSection() {
 
         {/* CTA */}
         <div className="mt-10 md:mt-20 lg:mt-10">
-          <button className="group relative flex items-center gap-2 md:gap-5 h-10 lg:h-14 overflow-hidden border border-[#4d4d4d] px-8 uppercase font-semibold tracking-[0.12em] pnpm text-white">
+          <Link href="/brands" className="group relative flex items-center gap-2 md:gap-5 h-10 lg:h-14 overflow-hidden border border-[#4d4d4d] px-8 w-max uppercase font-semibold tracking-[0.12em] pnpm text-white">
 
             <span className="absolute inset-0 origin-left scale-x-0 bg-white transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:scale-x-100" />
 
@@ -83,7 +85,7 @@ export default function BrandsSection() {
               ↗
             </span>
 
-          </button>
+          </Link>
         </div>
 
       </div>

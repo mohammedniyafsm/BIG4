@@ -31,6 +31,7 @@ export const productRepository = {
                 stock: true,
                 imageUrl: true,
                 isActive: true,
+                featured: true,
                 categoryId: true,
                 createdAt: true,
                 category: {

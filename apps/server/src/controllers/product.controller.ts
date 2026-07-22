@@ -5,6 +5,16 @@ const productService = new ProductService();
 
 export class ProductController {
   
+  static async getFeaturedProducts(req: Request, res: Response) {
+    try {
+      const result = await productService.getFeaturedProducts();
+      res.json(result);
+    } catch (error) {
+      console.error('Error fetching featured products:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
   static async getPublicProducts(req: Request, res: Response) {
     try {
       const result = await productService.getPublicProducts(req.query);

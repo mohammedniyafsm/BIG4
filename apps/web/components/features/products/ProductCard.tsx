@@ -15,7 +15,7 @@ const unitMap: Record<string, string> = {
 export function ProductCard({ product }: { product: Product }) {
   return (
     <Link href={`/products/${product.slug}`} className="group block">
-      <div className="flex flex-col h-full bg-card border border-border/50 rounded-[var(--radius-lg)] overflow-hidden hover:border-border transition-colors">
+      <div className="flex flex-col h-full bg-card border border-border/50 rounded-[var(--radius-lg)] overflow-hidden hover:border-border transition-colors font-inter">
         {/* Image Container */}
         <div className="relative aspect-square w-full overflow-hidden bg-muted/30">
           {product.imageUrl ? (
@@ -69,8 +69,8 @@ export function ProductCard({ product }: { product: Product }) {
             )}
           </div>
 
-          <div className="mt-auto pt-4 flex items-center justify-between border-t border-border/30">
-            <div className="flex flex-col">
+          <div className="mt-auto pt-4 flex flex-wrap items-end justify-between gap-x-3 gap-y-1 border-t border-border/30">
+            <div className="flex flex-col shrink-0">
               {product.salePrice ? (
                 <>
                   <span className="text-[16px] font-bold text-foreground leading-none">
@@ -86,7 +86,7 @@ export function ProductCard({ product }: { product: Product }) {
                 </span>
               )}
             </div>
-            <span className="text-meta pb-1">
+            <span className="text-meta pb-1 truncate max-w-[120px] sm:max-w-none text-right">
               {product.sku}
             </span>
           </div>

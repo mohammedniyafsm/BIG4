@@ -6,7 +6,7 @@ import { ProductTable } from "@/components/products/ProductTable";
 import { StockModal } from "@/components/products/StockModal";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/ui/ToastProvider";
-import { deleteProductAction } from "@/actions/product.actions";
+import { deleteProductAction, toggleProductFeaturedAction } from "@/actions/product.actions";
 import type { ProductListItem } from "@/types/admin.types";
 
 interface ProductListClientProps {
@@ -64,6 +64,16 @@ export function ProductListClient({ products }: ProductListClientProps) {
         }
     };
 
+    const handleFeatureToggle = async (product: ProductListItem) => {
+        const result = await toggleProductFeaturedAction(product.id);
+        if (result.success) {
+            toast(result.message, "success");
+            router.refresh();
+        } else {
+            toast(result.message, "error");
+        }
+    };
+
     return (
         <>
             {/* Segmented Control */}
@@ -97,6 +107,7 @@ export function ProductListClient({ products }: ProductListClientProps) {
                 products={products}
                 onStockClick={(product) => setStockProduct(product)}
                 onDeleteClick={(product) => setDeleteTarget(product)}
+                onFeatureToggle={handleFeatureToggle}
             />
 
             <StockModal

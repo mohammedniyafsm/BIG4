@@ -61,6 +61,7 @@ export interface ProductListItem {
     isActive: boolean;
     categoryId: string;
     categoryName: string;
+    featured: boolean;
     createdAt: Date;
 }
 

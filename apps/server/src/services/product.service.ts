@@ -110,6 +110,34 @@ export class ProductService {
     return { data: this.mapToPublicDTO(product) };
   }
 
+  async getFeaturedProducts() {
+    let featuredProducts = await this.repository.findAll({
+      where: { isActive: true, featured: true },
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+    });
+
+    if (featuredProducts.length < 4) {
+      const fallbackLimit = 8 - featuredProducts.length;
+      const featuredIds = featuredProducts.map((p: any) => p.id);
+      
+      const fallbackProducts = await this.repository.findAll({
+        where: { 
+          isActive: true,
+          id: { notIn: featuredIds }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: fallbackLimit,
+      });
+
+      featuredProducts = [...featuredProducts, ...fallbackProducts];
+    }
+
+    return {
+      data: featuredProducts.map(this.mapToPublicDTO),
+    };
+  }
+
   async getAdminProducts(filters: any) {
     // Admin gets all products, including inactive and costPrice
     const page = Number(filters.page) || 1;

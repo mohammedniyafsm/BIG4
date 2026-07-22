@@ -77,7 +77,7 @@ export default async function ProductDetailsPage({ params }: Props) {
       <main className="pt-28 pb-20">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
         />
         
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 xl:px-16">
@@ -110,10 +110,10 @@ export default async function ProductDetailsPage({ params }: Props) {
             <div className="lg:sticky lg:top-32 self-start">
               <FadeIn delay={0.1}>
                 <ProductGallery 
-                  images={Array.from(new Set([
-                    ...(product.imageUrl ? [product.imageUrl] : []),
-                    ...(product.images || [])
-                  ]))} 
+                  images={[...(product.imageUrl ? [product.imageUrl] : []), ...(product.images || [])]
+                    .filter((url, index, self) => 
+                      index === self.findIndex((u) => u.split('?')[0] === url.split('?')[0])
+                    ).slice(0, 5)}
                   alt={product.name} 
                 />
               </FadeIn>

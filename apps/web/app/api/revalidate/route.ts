@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     tags.forEach((tag) => {
-      revalidateTag(tag, {});
+      (revalidateTag as any)(tag);
     });
 
     return NextResponse.json({ revalidated: true, now: Date.now(), tags });

@@ -6,6 +6,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { getOffers } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
+import { siteConfig } from "@/lib/config/site";
 
 export default function OfferCarousel() {
   const [offers, setOffers] = useState<any[]>([]);
@@ -66,13 +67,13 @@ export default function OfferCarousel() {
           let href = "#";
           
           if (offer.linkType === "PRODUCT") {
-            href = `/product/${offer.linkValue}`;
+            href = `/products/${offer.linkValue}`;
           } else if (offer.linkType === "CATEGORY") {
             href = `/products?category=${offer.linkValue}`;
           } else if (offer.linkType === "EXTERNAL_URL") {
             href = offer.linkValue;
           } else if (offer.linkType === "WHATSAPP") {
-            href = `https://wa.me/${offer.linkValue}`;
+            href = siteConfig.contact.whatsappLink;
           }
 
           const slideContent = (

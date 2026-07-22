@@ -38,6 +38,7 @@ interface ProductData {
     images: ProductImageData[];
     categoryId: string;
     isActive: boolean;
+    featured: boolean;
     priceUnit: "PER_SQM" | "PER_PIECE" | "PER_SET" | "PER_BOX";
     salePrice: number | null;
     color: string | null;
@@ -79,6 +80,7 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
     const [costPrice, setCostPrice] = useState(product?.costPrice?.toString() ?? "");
     const [stock, setStock] = useState(product?.stock?.toString() ?? "0");
     const [categoryId, setCategoryId] = useState(product?.categoryId ?? "");
+    const [featured, setFeatured] = useState(product?.featured ?? false);
     
     // New fields
     const [priceUnit, setPriceUnit] = useState(product?.priceUnit ?? "PER_PIECE");
@@ -105,6 +107,7 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
             imageUrl: images.length > 0 ? images[0].url : undefined,
             images,
             categoryId,
+            featured,
             priceUnit,
             salePrice: salePrice ? parseFloat(salePrice) : undefined,
             color: color.trim() || undefined,
@@ -146,6 +149,7 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
         const imageUrl = images.length > 0 ? images[0].url : "";
         formData.set("imageUrl", imageUrl);
         formData.set("images", JSON.stringify(images));
+        formData.set("featured", featured ? "true" : "false");
         
         formData.set("priceUnit", rawData.priceUnit);
         if (rawData.salePrice !== undefined) formData.set("salePrice", rawData.salePrice.toString());
@@ -260,6 +264,7 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
                             </div>
                         </div>
 
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                         <div>
                             <label htmlFor="brandId" style={labelStyle}>Brand *</label>
                             <select
@@ -278,6 +283,18 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
                             </select>
                             {errors.brandId && <span id="brandId-error" style={{ display: "block", marginTop: 4, fontSize: 12, color: "var(--danger)" }}>{errors.brandId[0]}</span>}
                         </div>
+                        <div style={{ display: "flex", alignItems: "center", paddingTop: 28 }}>
+                            <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", ...labelStyle, marginBottom: 0 }}>
+                                <input
+                                    type="checkbox"
+                                    checked={featured}
+                                    onChange={(e) => setFeatured(e.target.checked)}
+                                    style={{ width: 16, height: 16, cursor: "pointer" }}
+                                />
+                                Feature on homepage
+                            </label>
+                        </div>
+                    </div>
 
                         <div>
                             <label htmlFor="description" style={labelStyle}>Description</label>

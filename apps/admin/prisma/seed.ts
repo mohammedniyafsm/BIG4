@@ -21,12 +21,39 @@ const prisma = new PrismaClient({ adapter });
 
 /** Showroom categories to seed */
 const CATEGORIES = [
-    { name: "Tiles", slug: "tiles" },
-    { name: "Sanitary Ware", slug: "sanitary-ware" },
-    { name: "Fittings", slug: "fittings" },
-    { name: "Pipes & Plumbing", slug: "pipes-and-plumbing" },
-    { name: "Construction Chemicals", slug: "construction-chemicals" },
-    { name: "Interior Products", slug: "interior-products" },
+    { name: "Ceramics & Tiles", slug: "ceramics-and-tiles" },
+    { name: "Sanitaryware", slug: "sanitaryware" },
+    { name: "Bath Fittings", slug: "bath-fittings" },
+    { name: "Luxury Bath", slug: "luxury-bath" },
+    { name: "Designer Surfaces", slug: "designer-surfaces" },
+    { name: "Building Materials", slug: "building-materials" },
+    { name: "Pipes & Fittings", slug: "pipes-and-fittings" },
+];
+
+/** Showroom brands to seed */
+const BRANDS = [
+    { name: "Simpolo", slug: "simpolo" },
+    { name: "Italus", slug: "italus" },
+    { name: "Hindware", slug: "hindware" },
+    { name: "Naveen Ceramics", slug: "naveen-ceramics" },
+    { name: "Marbito Ceramic", slug: "marbito-ceramic" },
+    { name: "Somany", slug: "somany" },
+    { name: "Anjani Tile", slug: "anjani-tile" },
+    { name: "Asian Paints Bathsense", slug: "asian-paints-bathsense" },
+    { name: "Johnson", slug: "johnson" },
+    { name: "Vanora", slug: "vanora" },
+    { name: "Jaquar", slug: "jaquar" },
+    { name: "Parryware", slug: "parryware" },
+    { name: "Futura", slug: "futura" },
+    { name: "Brizzio", slug: "brizzio" },
+    { name: "Varmora", slug: "varmora" },
+    { name: "Watercare", slug: "watercare" },
+    { name: "Acebond", slug: "acebond" },
+    { name: "JK Tile Adhesive", slug: "jk-tile-adhesive" },
+    { name: "Watertec", slug: "watertec" },
+    { name: "Sintex", slug: "sintex" },
+    { name: "Astral Pipes", slug: "astral-pipes" },
+    { name: "Ashirvad", slug: "ashirvad" },
 ];
 
 async function seedAdmin() {
@@ -85,9 +112,35 @@ async function seedCategories() {
     }
 }
 
+async function seedBrands() {
+    let created = 0;
+    let skipped = 0;
+
+    for (const brand of BRANDS) {
+        const existing = await prisma.brand.findUnique({
+            where: { slug: brand.slug },
+        });
+
+        if (existing) {
+            skipped++;
+            continue;
+        }
+
+        await prisma.brand.create({ data: brand });
+        created++;
+    }
+
+    if (created > 0) {
+        console.log(`✅ Brands seeded: ${created} created, ${skipped} already existed`);
+    } else {
+        console.log(`✅ All ${BRANDS.length} brands already exist`);
+    }
+}
+
 async function main() {
     await seedAdmin();
     await seedCategories();
+    await seedBrands();
 }
 
 main()

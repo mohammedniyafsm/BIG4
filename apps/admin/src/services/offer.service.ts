@@ -3,7 +3,23 @@ import type { Prisma } from "@prisma/client";
 
 export const offerService = {
   list: async () => {
+    const now = new Date();
     return prisma.offer.findMany({
+      where: {
+        isActive: true,
+        OR: [
+          { startDate: null },
+          { startDate: { lte: now } }
+        ],
+        AND: [
+          {
+            OR: [
+              { endDate: null },
+              { endDate: { gte: now } }
+            ]
+          }
+        ]
+      },
       orderBy: { displayOrder: "asc" },
     });
   },

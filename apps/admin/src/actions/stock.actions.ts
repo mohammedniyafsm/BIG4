@@ -34,7 +34,7 @@ export async function updateStockAction(
         // Revalidate
         revalidatePath("/admin/products");
         revalidatePath("/admin");
-        await triggerStorefrontRevalidation(["products", `product-${result.data?.slug || productId}`]);
+        await triggerStorefrontRevalidation(["products", `product-${productId}`]);
 
         return { success: true, message: "Stock updated successfully", data: null };
     } catch {

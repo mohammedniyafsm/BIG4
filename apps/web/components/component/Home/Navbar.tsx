@@ -193,7 +193,11 @@ export default function Navbar({
             alt="Logo"
             width={160}
             height={50}
-            className="hidden lg:flex h-12 w-auto sm:h-12 lg:h-14 xl:h-14 cursor-pointer"
+            className={`hidden lg:flex w-auto cursor-pointer ${
+              isLightStyle 
+                ? "h-20 sm:h-20 lg:h-24 xl:h-24" 
+                : "h-9 sm:h-9 lg:h-11 xl:h-11"
+            }`}
             priority
           />
         </Link>
@@ -252,7 +256,11 @@ export default function Navbar({
                 alt="Logo"
                 width={160}
                 height={50}
-                className="h-12 w-auto sm:h-12 lg:h-14 xl:h-14 cursor-pointer"
+                className={`w-auto cursor-pointer ${
+                  isLightStyle 
+                    ? "h-20 sm:h-20 lg:h-24 xl:h-24" 
+                    : "h-9 sm:h-9 lg:h-11 xl:h-11"
+                }`}
                 priority
               />
             </Link>

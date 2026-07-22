@@ -46,7 +46,7 @@ export async function getProducts(filters?: ProductFilters): Promise<PaginatedRe
   const endpoint = queryString ? `/products?${queryString}` : "/products";
   
   return fetchApi<PaginatedResponse<Product>>(endpoint, {
-    next: { tags: ["products"], revalidate: 300 }
+    next: { tags: ["products"], revalidate: 0 }
   });
 }
 
@@ -56,11 +56,25 @@ export async function getProducts(filters?: ProductFilters): Promise<PaginatedRe
 export async function getProductBySlug(slug: string): Promise<{ data: Product } | null> {
   try {
     return await fetchApi<{ data: Product }>(`/products/${slug}`, {
-      next: { tags: ["products", `product-${slug}`], revalidate: 300 }
+      next: { tags: ["products", `product-${slug}`], revalidate: 0 }
     });
   } catch (error) {
     console.error("Failed to fetch product by slug:", error);
     return null;
+  }
+}
+
+/**
+ * Fetch featured products for the homepage showcase.
+ */
+export async function getFeaturedProducts(): Promise<{ data: Product[] }> {
+  try {
+    return await fetchApi<{ data: Product[] }>("/products/featured", {
+      next: { tags: ["products"], revalidate: 0 }
+    });
+  } catch (error) {
+    console.error("Failed to fetch featured products:", error);
+    return { data: [] };
   }
 }
 
@@ -70,7 +84,7 @@ export async function getProductBySlug(slug: string): Promise<{ data: Product } 
 export async function getCategories(): Promise<{ data: Category[] }> {
   try {
     return await fetchApi<{ data: Category[] }>("/categories", {
-      next: { tags: ["categories"], revalidate: 300 }
+      next: { tags: ["categories"], revalidate: 0 }
     });
   } catch (error) {
     console.error("Failed to fetch categories:", error);

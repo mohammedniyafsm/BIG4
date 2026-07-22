@@ -11,12 +11,12 @@ export default function ContactPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <>
+    <div className="bg-black min-h-screen text-white">
       <PageLoader />
       <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <FullscreenMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <ContactForm />
       <SiteFooter bgColor="bg-black" textColor="text-white" />
-    </>
+    </div>
   );
 }

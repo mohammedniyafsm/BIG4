@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 type SiteFooterProps = {
   brandName?: string;
@@ -11,9 +12,20 @@ type SiteFooterProps = {
 };
 
 function NavItem({ label }: { label: string }) {
+  const getHref = (label: string) => {
+    switch (label) {
+      case "HOME": return "/";
+      case "ABOUT": return "/about";
+      case "BRANDS": return "/brands";
+      case "CONTACT": return "/contact";
+      case "CATALOG": return "/products";
+      default: return "/";
+    }
+  };
+
   return (
-    <a
-      href={`#${label.toLowerCase()}`}
+    <Link
+      href={getHref(label)}
       className="group inline-block [perspective:1000px]"
     >
       <span className="relative block h-[1.25em] overflow-hidden">
@@ -53,12 +65,14 @@ function NavItem({ label }: { label: string }) {
           {label}
         </span>
       </span>
-    </a>
+    </Link>
   );
 }
 
+import { siteConfig } from "@/lib/config/site";
+
 export default function SiteFooter({
-  brandName = "BIG4",
+  brandName = siteConfig.name,
   year = new Date().getFullYear(),
   bgColor = "bg-background",
   textColor = "text-foreground",
