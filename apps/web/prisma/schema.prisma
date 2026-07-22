@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                  String               @id @default(cuid())
+  email               String               @unique
+  password            String
+  name                String
+  isActive            Boolean              @default(true)
+  lastLoginAt         DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  failedLoginAttempts Int                  @default(0)
+  lockedUntil         DateTime?
+  passwordResetTokens PasswordResetToken[]
+  refreshTokens       RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Brand {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@map("brands")
+}
+
+enum PriceUnit {
+  PER_SQM
+  PER_PIECE
+  PER_SET
+  PER_BOX
+}
+
+model Product {
+  id             String         @id @default(cuid())
+  name           String
+  slug           String         @unique
+  sku            String         @unique
+  description    String?
+  price          Float
+  costPrice      Float
+  stock          Int            @default(0)
+  imageUrl       String?
+  isActive       Boolean        @default(true)
+  featured       Boolean        @default(false)
+  categoryId     String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  brandId        String?
+  priceUnit      PriceUnit      @default(PER_PIECE)
+  salePrice      Decimal?       @db.Decimal(10, 2)
+  color          String?
+  material       String?
+  finish         String?
+  size           String?
+  coveragePerBox Decimal?       @db.Decimal(8, 3)
+  highlights     String[]       @default([])
+  images         ProductImage[]
+  brand          Brand?         @relation(fields: [brandId], references: [id])
+  category       Category       @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([name])
+  @@index([isActive])
+  @@index([featured])
+  @@index([stock])
+  @@map("products")
+}
+
+model ProductImage {
+  id           String   @id @default(cuid())
+  url          String
+  publicId     String
+  displayOrder Int      @default(0)
+  productId    String
+  createdAt    DateTime @default(now())
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+enum OfferLinkType {
+  NONE
+  WHATSAPP
+  EXTERNAL_URL
+  PRODUCT
+  CATEGORY
+}
+
+model Offer {
+  id                String        @id @default(cuid())
+  title             String
+  description       String?       @db.Text
+  discountText      String?
+  bannerImage       String
+  bannerImageMobile String?
+  linkType          OfferLinkType @default(NONE)
+  linkValue         String?
+  displayOrder      Int           @default(0)
+  isActive          Boolean       @default(true)
+  startDate         DateTime?
+  endDate           DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([isActive, displayOrder])
+  @@map("offers")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  interest  String?
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@map("leads")
+}
