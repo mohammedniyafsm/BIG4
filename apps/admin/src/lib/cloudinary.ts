@@ -4,7 +4,7 @@ import { env } from "@/config/env";
  * Cloudinary upload helper.
  *
  * Uses the Cloudinary REST Upload API directly (no SDK dependency).
- * Images are uploaded to the "big4-products" folder using environment credentials.
+ * Images are uploaded to the "big4-products" folder using valid API key credentials.
  */
 
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`;
