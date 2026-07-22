@@ -1,6 +1,7 @@
 /** Storefront Direct Database Data Fetching API */
 import { Category, PaginatedResponse, Product, ProductFilters } from "@/types/product";
 import { prisma } from "@/lib/prisma";
+import { Offer } from "@prisma/client";
 
 function formatProduct(p: any): Product {
   return {
@@ -197,7 +198,7 @@ export async function getCategories(): Promise<{ data: Category[] }> {
 /**
  * Fetch active offers for the home page banner carousel.
  */
-export async function getOffers(): Promise<{ data: any[] }> {
+export async function getOffers(): Promise<{ data: Offer[] }> {
   try {
     const now = new Date();
     const rawOffers = await prisma.offer.findMany({
