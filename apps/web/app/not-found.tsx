@@ -2,6 +2,8 @@
 
 import React from "react";
 
+export const dynamic = "force-static";
+
 export default function NotFound() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", textAlign: "center", backgroundColor: "#ffffff", color: "#000000", fontFamily: "sans-serif" }}>
