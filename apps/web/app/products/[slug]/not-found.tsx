@@ -1,27 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import Navbar from "@/components/component/Home/Navbar";
-import SiteFooter from "@/components/component/Home/Footer";
+import React from "react";
 
 export default function ProductNotFound() {
   return (
-    <>
-      <Navbar />
-      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
-        <div className="text-center max-w-md">
-          <h1 className="text-9xl font-bold font-heading text-muted/20">404</h1>
-          <h2 className="text-3xl font-bold mt-4 mb-2">Product Not Found</h2>
-          <p className="text-muted-foreground mb-8">
-            The product you're looking for doesn't exist or has been removed.
-          </p>
-          <Button size="lg" asChild className="w-full">
-            <Link href="/products">Browse All Products</Link>
-          </Button>
-        </div>
-      </main>
-      <SiteFooter />
-    </>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", textAlign: "center", backgroundColor: "#ffffff", color: "#000000", fontFamily: "sans-serif" }}>
+      <div style={{ maxWidth: "420px", width: "100%" }}>
+        <h1 style={{ fontSize: "6rem", fontWeight: 900, color: "#e5e5e5", margin: "0 0 8px", lineHeight: 1 }}>404</h1>
+        <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 12px", color: "#111111" }}>Product Not Found</h2>
+        <p style={{ fontSize: "0.875rem", color: "#666666", marginBottom: "32px", lineHeight: 1.5 }}>
+          The product you're looking for doesn't exist or has been removed.
+        </p>
+        <a
+          href="/products"
+          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", height: "48px", padding: "0 32px", borderRadius: "9999px", background: "#000000", color: "#ffffff", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", textDecoration: "none" }}
+        >
+          Browse All Products
+        </a>
+      </div>
+    </div>
   );
 }

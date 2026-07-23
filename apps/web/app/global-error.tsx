@@ -10,18 +10,18 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
-      <body className="bg-black text-white font-sans min-h-screen flex items-center justify-center p-6 text-center">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-6xl font-black text-neutral-800 mb-2">500</h1>
-          <h2 className="text-2xl font-bold mb-4">Something went wrong!</h2>
-          <p className="text-sm text-neutral-400 mb-8">
-            An unexpected error occurred. Please try refreshing the page.
+      <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", textAlign: "center", backgroundColor: "#000000", color: "#ffffff", fontFamily: "sans-serif", margin: 0 }}>
+        <div style={{ maxWidth: "420px", width: "100%" }}>
+          <h1 style={{ fontSize: "6rem", fontWeight: 900, color: "#333333", margin: "0 0 8px", lineHeight: 1 }}>500</h1>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 12px", color: "#ffffff" }}>Global Error</h2>
+          <p style={{ fontSize: "0.875rem", color: "#888888", marginBottom: "32px", lineHeight: 1.5 }}>
+            An unexpected application error occurred. Please try refreshing.
           </p>
           <button
             onClick={() => reset()}
-            className="px-6 py-3 rounded-full bg-white text-black text-xs font-semibold uppercase tracking-widest hover:bg-neutral-200 transition-colors cursor-pointer"
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", height: "48px", padding: "0 32px", borderRadius: "9999px", background: "#ffffff", color: "#000000", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", border: "none", cursor: "pointer" }}
           >
-            Try again
+            Try Again
           </button>
         </div>
       </body>

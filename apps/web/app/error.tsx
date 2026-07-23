@@ -1,9 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import Navbar from "@/components/component/Home/Navbar";
-import SiteFooter from "@/components/component/Home/Footer";
 
 export default function Error({
   reset,
@@ -12,32 +9,28 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="light-theme bg-background text-foreground min-h-screen flex flex-col justify-between">
-      <Navbar theme="light" />
-      <main className="flex-1 flex flex-col items-center justify-center p-6 text-center pt-32 pb-20">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-6xl font-black text-muted-foreground/30 mb-2">500</h1>
-          <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
-          <p className="text-muted-foreground text-sm mb-8">
-            An unexpected error occurred while loading this page.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => reset()}
-              className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-black text-white text-xs font-semibold uppercase tracking-widest hover:bg-neutral-800 transition-colors cursor-pointer"
-            >
-              Try Again
-            </button>
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center h-12 px-8 rounded-full border border-black/20 text-black text-xs font-semibold uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
-            >
-              Back to Home
-            </Link>
-          </div>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", textAlign: "center", backgroundColor: "#ffffff", color: "#000000", fontFamily: "sans-serif" }}>
+      <div style={{ maxWidth: "420px", width: "100%" }}>
+        <h1 style={{ fontSize: "6rem", fontWeight: 900, color: "#e5e5e5", margin: "0 0 8px", lineHeight: 1 }}>500</h1>
+        <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 12px", color: "#111111" }}>Something went wrong</h2>
+        <p style={{ fontSize: "0.875rem", color: "#666666", marginBottom: "32px", lineHeight: 1.5 }}>
+          An unexpected error occurred while loading this page.
+        </p>
+        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+          <button
+            onClick={() => reset()}
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", height: "48px", padding: "0 28px", borderRadius: "9999px", background: "#000000", color: "#ffffff", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", border: "none", cursor: "pointer" }}
+          >
+            Try Again
+          </button>
+          <a
+            href="/"
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", height: "48px", padding: "0 28px", borderRadius: "9999px", background: "transparent", color: "#000000", border: "1px solid #cccccc", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", textDecoration: "none" }}
+          >
+            Back Home
+          </a>
         </div>
-      </main>
-      <SiteFooter bgColor="bg-white" textColor="text-black" />
+      </div>
     </div>
   );
 }
