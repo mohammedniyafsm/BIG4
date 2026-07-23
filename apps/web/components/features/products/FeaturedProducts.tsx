@@ -47,13 +47,13 @@ export async function FeaturedProducts() {
 
         {/* Product Grid / Carousel */}
         <div className="relative group w-full">
-          {/* Mobile: snap-x carousel, Desktop: CSS grid or flex center if few */}
-          <div className={`flex ${isFew ? 'md:justify-center md:flex-wrap' : 'md:grid'} overflow-x-auto snap-x snap-mandatory ${!isFew ? 'md:grid-cols-2 lg:grid-cols-4' : ''} gap-5 md:gap-6 pb-8 md:pb-0 scrollbar-hide -mx-6 px-[7.5vw] sm:px-12 md:mx-0 md:px-0`}>
+          {/* Mobile: snap-x carousel, Desktop: 3-column grid like product page */}
+          <div className="flex md:grid overflow-x-auto snap-x snap-mandatory grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-8 md:pb-0 scrollbar-hide -mx-6 px-[7.5vw] sm:px-12 md:mx-0 md:px-0 items-stretch">
             {products.map((product, idx) => (
               <FadeIn 
                 key={product.id} 
                 delay={idx * 0.1} 
-                className={`w-[85vw] sm:w-[340px] ${isFew ? 'md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] md:max-w-sm' : 'md:w-auto'} shrink-0 snap-center`}
+                className="w-[85vw] sm:w-[340px] md:w-auto shrink-0 snap-center h-full flex flex-col"
               >
                 <ProductCard product={product} />
               </FadeIn>

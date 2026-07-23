@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavLink from "./NavLink";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import FullscreenMenu from "./FullscreenMenu";
 
 type NavbarProps = {
   menuOpen?: boolean;
@@ -26,6 +27,10 @@ export default function Navbar({
   const navRef = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
   const isHidden = useRef(false);
+
+  const [internalMenuOpen, setInternalMenuOpen] = useState(false);
+  const isControlled = menuOpen !== undefined && setMenuOpen !== undefined;
+  const activeSetMenuOpen = isControlled ? setMenuOpen! : setInternalMenuOpen;
 
   // Determine effective text color and light/dark visual style
   const computedTextColor = textColor || (theme === 'light' ? 'text-black' : 'text-white');
@@ -242,7 +247,7 @@ export default function Navbar({
               width={42}
               height={42}
               className={`nav-menu h-10 w-10 cursor-pointer ${isLightStyle ? 'invert' : ''}`}
-              onClick={() => setMenuOpen?.(true)}
+              onClick={() => activeSetMenuOpen(true)}
             />
           </div>
         </nav>
@@ -286,11 +291,15 @@ export default function Navbar({
               width={40}
               height={40}
               className={`mobile-menu h-8 w-8 sm:h-10 sm:w-10 cursor-pointer ${isLightStyle ? 'invert' : ''}`}
-              onClick={() => setMenuOpen?.(true)}
+              onClick={() => activeSetMenuOpen(true)}
             />
           </div>
         </div>
       </div>
+
+      {!isControlled && (
+        <FullscreenMenu menuOpen={internalMenuOpen} setMenuOpen={setInternalMenuOpen} />
+      )}
     </header>
   );
 }

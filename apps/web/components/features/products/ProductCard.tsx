@@ -14,10 +14,10 @@ const unitMap: Record<string, string> = {
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <Link href={`/products/${product.slug}`} className="group block">
+    <Link href={`/products/${product.slug}`} className="group block h-full w-full">
       <div className="flex flex-col h-full bg-card border border-border/50 rounded-[var(--radius-lg)] overflow-hidden hover:border-border transition-colors font-inter">
         {/* Image Container */}
-        <div className="relative aspect-square w-full overflow-hidden bg-muted/30">
+        <div className="relative aspect-square w-full overflow-hidden bg-muted/30 shrink-0">
           {product.imageUrl ? (
             <>
               <Image
@@ -50,20 +50,20 @@ export function ProductCard({ product }: { product: Product }) {
 
         {/* Content */}
         <div className="flex flex-col flex-grow p-4 gap-2">
-          <div className="flex justify-between items-start gap-2">
-            <span className="text-micro text-muted-foreground">
+          <div className="flex justify-between items-start gap-2 min-h-[20px]">
+            <span className="text-micro text-muted-foreground truncate max-w-[70%]">
               {product.category.name}{product.brand ? ` • ${product.brand}` : ""}
             </span>
             <StockBadge stock={product.stock} />
           </div>
           
-          <h3 className="text-card-title line-clamp-2 h-[42px]">
+          <h3 className="text-card-title line-clamp-2 min-h-[42px] leading-snug">
             {product.name}
           </h3>
 
-          <div className="h-[20px]">
+          <div className="min-h-[20px]">
             {(product.size || product.finish) && (
-              <p className="text-meta">
+              <p className="text-meta truncate">
                 {[product.size, product.finish].filter(Boolean).join(" · ")}
               </p>
             )}

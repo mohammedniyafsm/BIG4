@@ -18,6 +18,7 @@ function NavItem({ label }: { label: string }) {
       case "ABOUT": return "/about";
       case "BRANDS": return "/brands";
       case "CONTACT": return "/contact";
+      case "PRODUCTS": return "/products";
       case "CATALOG": return "/products";
       default: return "/";
     }
@@ -92,7 +93,7 @@ export default function SiteFooter({
     "ABOUT",
     "BRANDS",
     "CONTACT",
-    "CATALOG",
+    "PRODUCTS",
   ];
 
   return (
