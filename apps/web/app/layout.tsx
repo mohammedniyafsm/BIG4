@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   alternates: {
-    canonical: "./",
+    canonical: siteConfig.website,
   },
   openGraph: {
     title: siteConfig.seo.title,
