@@ -21,6 +21,9 @@ import SiteFooter from "@/components/component/Home/Footer";
 import FadeIn from "@/components/animations/FadeIn";
 import { siteConfig } from "@/lib/config/site";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "Tiles & Sanitaryware Catalog — Big4 Sullia",
   description: "Browse our full catalog of floor tiles, wall tiles, sanitaryware, and bath fittings. Visit Big4 Tiles & Sanitary in Sullia to view physical samples.",

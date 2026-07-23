@@ -22,6 +22,9 @@ import {
 
 import { siteConfig } from "@/lib/config/site";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
