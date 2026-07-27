@@ -85,7 +85,6 @@ export default async function EditProductPage({ params }: PageProps) {
                     material: product.material,
                     finish: product.finish,
                     size: product.size,
-                    coveragePerBox: product.coveragePerBox ? Number(product.coveragePerBox) : null,
                     highlights: product.highlights,
                 }}
             />

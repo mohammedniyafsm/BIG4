@@ -127,7 +127,6 @@ export const productService = {
             material: input.material ?? null,
             finish: input.finish ?? null,
             size: input.size ?? null,
-            coveragePerBox: input.coveragePerBox ?? null,
             highlights: input.highlights ?? [],
             featured: input.featured ?? false,
         };
@@ -200,7 +199,6 @@ export const productService = {
         if (input.material !== undefined) data.material = input.material;
         if (input.finish !== undefined) data.finish = input.finish;
         if (input.size !== undefined) data.size = input.size;
-        if (input.coveragePerBox !== undefined) data.coveragePerBox = input.coveragePerBox;
         if (input.highlights !== undefined) data.highlights = input.highlights;
         if (input.featured !== undefined) data.featured = input.featured;
 

@@ -28,7 +28,6 @@ function formatProduct(p: any): Product {
     material: p.material ?? null,
     finish: p.finish ?? null,
     size: p.size ?? null,
-    coveragePerBox: p.coveragePerBox ? Number(p.coveragePerBox) : null,
     highlights: p.highlights ?? [],
     images: p.images ? p.images.map((img: any) => img.url) : [],
   };

@@ -77,6 +77,7 @@ model Brand {
 
 enum PriceUnit {
   PER_SQM
+  PER_SQFT
   PER_PIECE
   PER_SET
   PER_BOX
@@ -104,7 +105,6 @@ model Product {
   material       String?
   finish         String?
   size           String?
-  coveragePerBox Decimal?       @db.Decimal(8, 3)
   highlights     String[]       @default([])
   images         ProductImage[]
   brand          Brand?         @relation(fields: [brandId], references: [id])

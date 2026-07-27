@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 
-const PriceUnitEnum = z.enum(["PER_SQM", "PER_PIECE", "PER_SET", "PER_BOX"]);
+const PriceUnitEnum = z.enum(["PER_SQM", "PER_SQFT", "PER_PIECE", "PER_SET", "PER_BOX"]);
 
 /**
  * Product-related validation schemas.
@@ -38,7 +38,6 @@ export const createProductSchema = z.object({
     material: z.string().trim().max(100).optional(),
     finish: z.string().trim().max(100).optional(),
     size: z.string().trim().max(100).optional(),
-    coveragePerBox: z.number().positive("Coverage per box must be greater than 0").optional(),
     highlights: z.array(
         z.string().trim().min(1, "Highlight cannot be empty").max(120, "Highlight max 120 characters")
     ).max(10, "Cannot exceed 10 highlights").default([]),
@@ -71,7 +70,6 @@ export const updateProductSchema = z.object({
     material: z.string().trim().max(100).optional().nullable(),
     finish: z.string().trim().max(100).optional().nullable(),
     size: z.string().trim().max(100).optional().nullable(),
-    coveragePerBox: z.number().positive("Coverage per box must be greater than 0").optional().nullable(),
     highlights: z.array(
         z.string().trim().min(1, "Highlight cannot be empty").max(120, "Highlight max 120 characters")
     ).max(10, "Cannot exceed 10 highlights").optional(),

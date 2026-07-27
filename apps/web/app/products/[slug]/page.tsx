@@ -198,7 +198,7 @@ export default async function ProductDetailsPage({ params }: Props) {
                     <span className="text-[24px] md:text-[26px] font-bold text-foreground leading-[1.2]">
                       {formatPrice(effectivePrice)}
                       <span className="text-[14px] font-medium text-muted-foreground ml-2">
-                        {product.priceUnit === "PER_SQM" ? "/ m²" : product.priceUnit === "PER_PIECE" ? "/ pc" : product.priceUnit === "PER_BOX" ? "/ box" : "/ set"}
+                        {product.priceUnit === "PER_SQM" ? "/ m²" : product.priceUnit === "PER_SQFT" ? "/ sq.ft" : product.priceUnit === "PER_PIECE" ? "/ pc" : product.priceUnit === "PER_BOX" ? "/ box" : "/ set"}
                       </span>
                     </span>
                     {product.salePrice && (
@@ -279,7 +279,6 @@ export default async function ProductDetailsPage({ params }: Props) {
                     price: product.price,
                     salePrice: product.salePrice,
                     priceUnit: product.priceUnit,
-                    coveragePerBox: product.coveragePerBox,
                   }} 
                 />
               </div>
@@ -295,7 +294,6 @@ export default async function ProductDetailsPage({ params }: Props) {
                     ...(product.material ? [{ label: "Material", value: product.material }] : []),
                     ...(product.finish ? [{ label: "Finish", value: product.finish }] : []),
                     ...(product.size ? [{ label: "Size", value: product.size }] : []),
-                    ...(product.coveragePerBox ? [{ label: "Coverage per Box", value: `${product.coveragePerBox} m²` }] : []),
                   ]}
                 />
               </div>

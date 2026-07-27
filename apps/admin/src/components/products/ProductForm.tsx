@@ -39,13 +39,12 @@ interface ProductData {
     categoryId: string;
     isActive: boolean;
     featured: boolean;
-    priceUnit: "PER_SQM" | "PER_PIECE" | "PER_SET" | "PER_BOX";
+    priceUnit: "PER_SQM" | "PER_SQFT" | "PER_PIECE" | "PER_SET" | "PER_BOX";
     salePrice: number | null;
     color: string | null;
     material: string | null;
     finish: string | null;
     size: string | null;
-    coveragePerBox: number | null;
     highlights: string[];
 }
 
@@ -83,13 +82,12 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
     const [featured, setFeatured] = useState(product?.featured ?? false);
     
     // New fields
-    const [priceUnit, setPriceUnit] = useState(product?.priceUnit ?? "PER_PIECE");
+    const [priceUnit, setPriceUnit] = useState<"PER_SQM" | "PER_SQFT" | "PER_PIECE" | "PER_SET" | "PER_BOX">(product?.priceUnit ?? "PER_PIECE");
     const [salePrice, setSalePrice] = useState(product?.salePrice?.toString() ?? "");
     const [color, setColor] = useState(product?.color ?? "");
     const [material, setMaterial] = useState(product?.material ?? "");
     const [finish, setFinish] = useState(product?.finish ?? "");
     const [size, setSize] = useState(product?.size ?? "");
-    const [coveragePerBox, setCoveragePerBox] = useState(product?.coveragePerBox?.toString() ?? "");
     const [highlights, setHighlights] = useState<string[]>(product?.highlights ?? []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -114,7 +112,6 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
             material: material.trim() || undefined,
             finish: finish.trim() || undefined,
             size: size.trim() || undefined,
-            coveragePerBox: coveragePerBox ? parseFloat(coveragePerBox) : undefined,
             highlights: highlights.map(h => h.trim()).filter(Boolean),
         };
 
@@ -157,7 +154,6 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
         if (rawData.material) formData.set("material", rawData.material);
         if (rawData.finish) formData.set("finish", rawData.finish);
         if (rawData.size) formData.set("size", rawData.size);
-        if (rawData.coveragePerBox !== undefined) formData.set("coveragePerBox", rawData.coveragePerBox.toString());
         if (rawData.highlights && rawData.highlights.length > 0) formData.set("highlights", JSON.stringify(rawData.highlights));
 
         const result = isEdit
@@ -337,11 +333,12 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
                                     <select
                                         id="priceUnit"
                                         value={priceUnit}
-                                        onChange={(e) => setPriceUnit(e.target.value as "PER_SQM" | "PER_PIECE" | "PER_SET" | "PER_BOX")}
+                                        onChange={(e) => setPriceUnit(e.target.value as "PER_SQM" | "PER_SQFT" | "PER_PIECE" | "PER_SET" | "PER_BOX")}
                                         style={{ ...getInputStyle(false), flex: 1, padding: "10px 8px" }}
                                     >
                                         <option value="PER_PIECE">/ pc</option>
                                         <option value="PER_SQM">/ m²</option>
+                                        <option value="PER_SQFT">/ sq.ft</option>
                                         <option value="PER_BOX">/ box</option>
                                         <option value="PER_SET">/ set</option>
                                     </select>
@@ -427,11 +424,6 @@ export function ProductForm({ categories, brands, product }: ProductFormProps) {
                                 <label htmlFor="size" style={labelStyle}>Size</label>
                                 <input id="size" type="text" value={size} onChange={(e) => setSize(e.target.value)} placeholder="e.g. 600x1200mm" style={getInputStyle(!!errors.size)} />
                                 {errors.size && <span style={{ display: "block", marginTop: 4, fontSize: 12, color: "var(--danger)" }}>{errors.size[0]}</span>}
-                            </div>
-                            <div>
-                                <label htmlFor="coveragePerBox" style={labelStyle}>Coverage per Box (m²)</label>
-                                <input id="coveragePerBox" type="number" step="0.001" min="0" value={coveragePerBox} onChange={(e) => setCoveragePerBox(e.target.value)} placeholder="1.44" style={getInputStyle(!!errors.coveragePerBox)} />
-                                {errors.coveragePerBox && <span style={{ display: "block", marginTop: 4, fontSize: 12, color: "var(--danger)" }}>{errors.coveragePerBox[0]}</span>}
                             </div>
                         </div>
                     </div>

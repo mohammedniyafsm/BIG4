@@ -11,11 +11,11 @@ function createPrismaClient() {
 }
 
 const globalForPrisma = globalThis as unknown as {
-    prisma_web: PrismaClient | undefined;
+    prisma_web_v2: PrismaClient | undefined;
 };
 
-export const prisma = globalForPrisma.prisma_web ?? createPrismaClient();
+export const prisma = globalForPrisma.prisma_web_v2 ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
-    globalForPrisma.prisma_web = prisma;
+    globalForPrisma.prisma_web_v2 = prisma;
 }

@@ -9,7 +9,7 @@ export default function NavLink({ title, href }: NavLinkProps) {
   return (
     <a
       href={href}
-      className="group relative block h-[10px] overflow-hidden uppercase"
+      className="group relative block h-[18px] overflow-hidden uppercase"
     >
       <div
         className="
@@ -20,11 +20,11 @@ export default function NavLink({ title, href }: NavLinkProps) {
           group-hover:-translate-y-1/2
         "
       >
-        <span className="h-[10px] text-[8px] font-semibold tracking-[0.12em] leading-[10px]">
+        <span className="h-[18px] text-[12px] md:text-[13px] font-semibold tracking-[0.15em] leading-[18px]">
           {title}
         </span>
 
-        <span className="h-[10px] text-[8px] font-semibold tracking-[0.12em] leading-[10px]">
+        <span className="h-[18px] text-[12px] md:text-[13px] font-semibold tracking-[0.15em] leading-[18px]">
           {title}
         </span>
       </div>

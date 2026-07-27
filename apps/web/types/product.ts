@@ -19,13 +19,12 @@ export interface Product {
   category: Category;
   createdAt: string;
   updatedAt: string;
-  priceUnit: "PER_SQM" | "PER_PIECE" | "PER_SET" | "PER_BOX";
+  priceUnit: "PER_SQM" | "PER_SQFT" | "PER_PIECE" | "PER_SET" | "PER_BOX";
   salePrice: number | null;
   color: string | null;
   material: string | null;
   finish: string | null;
   size: string | null;
-  coveragePerBox: number | null;
   highlights: string[];
   images?: string[];
 }

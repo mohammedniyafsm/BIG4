@@ -13,7 +13,6 @@ interface ProductActionsProps {
     price: number;
     salePrice: number | null;
     priceUnit: string;
-    coveragePerBox: number | null;
   };
 }
 
@@ -23,20 +22,16 @@ export function ProductActions({ product }: ProductActionsProps) {
   const [quantity, setQuantity] = useState(1);
   const effectivePrice = product.salePrice ?? product.price;
 
-  const isAreaCalc = product.priceUnit === "PER_SQM" && !!product.coveragePerBox;
+  const isAreaCalc = product.priceUnit === "PER_SQM" || product.priceUnit === "PER_SQFT";
+  const unitLabel = product.priceUnit === "PER_SQFT" ? "sq.ft" : "m²";
   
   const areaNum = parseFloat(area);
   const isValidArea = !isNaN(areaNum) && areaNum > 0;
-  
-  const boxes = (isAreaCalc && isValidArea) 
-    ? Math.ceil((areaNum * (includeWastage ? 1.10 : 1.0)) / product.coveragePerBox!) 
-    : 0;
-    
-  const actualCoverage = isAreaCalc ? (boxes * product.coveragePerBox!) : 0;
+  const effectiveArea = isValidArea ? (areaNum * (includeWastage ? 1.10 : 1.0)) : 0;
   
   // Total logic based on unit type
   const total = isAreaCalc 
-    ? (boxes * product.coveragePerBox! * effectivePrice) 
+    ? (effectiveArea * effectivePrice) 
     : (quantity * effectivePrice);
 
   // Build WhatsApp URL
@@ -80,12 +75,12 @@ export function ProductActions({ product }: ProductActionsProps) {
               type="number"
               min="0"
               step="0.1"
-              placeholder="Enter area (m²)"
+              placeholder={`Enter area (${unitLabel})`}
               value={area}
               onChange={(e) => setArea(e.target.value)}
               className="flex-1 px-4 py-3 bg-background border border-border rounded-md text-sm outline-none focus:border-primary transition-colors"
             />
-            <span className="text-sm text-muted-foreground whitespace-nowrap">m² needed</span>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">{unitLabel} needed</span>
           </div>
           
           <label className="flex items-center gap-2 mb-4 text-sm text-muted-foreground cursor-pointer">
@@ -101,10 +96,10 @@ export function ProductActions({ product }: ProductActionsProps) {
           {isValidArea && (
             <div className="flex flex-col gap-2 p-3 bg-muted/30 rounded-md">
               <div className="flex justify-between items-center text-sm">
-                <span className="text-muted-foreground">Required Boxes:</span>
+                <span className="text-muted-foreground">Effective Area:</span>
                 <span className="font-medium">
-                  {includeWastage ? `${areaNum} m² + 10% → ` : ''}
-                  {boxes} boxes <span className="text-muted-foreground font-normal">({actualCoverage.toFixed(3)} m²)</span>
+                  {includeWastage ? `${areaNum} ${unitLabel} + 10% → ` : ''}
+                  {effectiveArea.toFixed(2)} {unitLabel}
                 </span>
               </div>
               <div className="flex justify-between items-center text-sm font-bold border-t border-border/50 pt-2 mt-1">

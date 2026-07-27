@@ -39,7 +39,6 @@ export async function createProductAction(formData: FormData): Promise<ActionRes
             material: (formData.get("material") as string) || undefined,
             finish: (formData.get("finish") as string) || undefined,
             size: (formData.get("size") as string) || undefined,
-            coveragePerBox: formData.has("coveragePerBox") && formData.get("coveragePerBox") ? parseFloat(formData.get("coveragePerBox") as string) : undefined,
             highlights: formData.has("highlights") ? JSON.parse(formData.get("highlights") as string) : undefined,
             featured: formData.has("featured") ? formData.get("featured") === "true" : undefined,
         };
@@ -103,7 +102,6 @@ export async function updateProductAction(
             material: formData.has("material") ? (formData.get("material") as string || undefined) : undefined,
             finish: formData.has("finish") ? (formData.get("finish") as string || undefined) : undefined,
             size: formData.has("size") ? (formData.get("size") as string || undefined) : undefined,
-            coveragePerBox: formData.has("coveragePerBox") && formData.get("coveragePerBox") ? parseFloat(formData.get("coveragePerBox") as string) : undefined,
             highlights: formData.has("highlights") ? JSON.parse(formData.get("highlights") as string) : undefined,
             featured: formData.has("featured") ? formData.get("featured") === "true" : undefined,
         };

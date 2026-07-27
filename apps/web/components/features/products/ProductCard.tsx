@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 const unitMap: Record<string, string> = {
   PER_SQM: "/ m²",
+  PER_SQFT: "/ sq.ft",
   PER_PIECE: "/ pc",
   PER_BOX: "/ box",
   PER_SET: "/ set"
