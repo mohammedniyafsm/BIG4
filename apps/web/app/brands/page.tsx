@@ -3,6 +3,7 @@ import BrandsClient from "./BrandsClient";
 import { siteConfig } from "@/lib/config/site";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
