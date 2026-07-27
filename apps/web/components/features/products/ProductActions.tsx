@@ -50,9 +50,9 @@ export function ProductActions({ product }: ProductActionsProps) {
     
     let message = "";
     if (isSample) {
-      message = `Hi Big4 OVLs, I'd like to request a *sample* for *${product.name}*${skuSegment}.\nPlease let me know the process and any charges involved.\nProduct link: ${productUrl}`;
+      message = `Hi Big4 Tiles & Sanitary, I'd like to request a *sample* for *${product.name}*${skuSegment}.\nPlease let me know the process and any charges involved.\nProduct link: ${productUrl}`;
     } else {
-      message = `Hi Big4 OVLs, I'm interested in *${product.name}*${skuSegment}.\nCould you share more details, pricing, and availability?\nProduct link: ${productUrl}`;
+      message = `Hi Big4 Tiles & Sanitary, I'm interested in *${product.name}*${skuSegment}.\nCould you share more details, pricing, and availability?\nProduct link: ${productUrl}`;
     }
     
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
