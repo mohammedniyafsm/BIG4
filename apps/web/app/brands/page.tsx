@@ -24,21 +24,26 @@ export const metadata: Metadata = {
 };
 
 export default async function BrandsPage() {
-  const brands = await prisma.brand.findMany({
-    where: {
-      isActive: true,
-    },
-    orderBy: [
-      { displayOrder: "asc" },
-      { name: "asc" },
-    ],
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      imageUrl: true,
-    },
-  });
+  let brands: any[] = [];
+  try {
+    brands = await prisma.brand.findMany({
+      where: {
+        isActive: true,
+      },
+      orderBy: [
+        { displayOrder: "asc" },
+        { name: "asc" },
+      ],
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        imageUrl: true,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch brands during static build/render:", error);
+  }
 
   return <BrandsClient brands={brands} />;
 }
