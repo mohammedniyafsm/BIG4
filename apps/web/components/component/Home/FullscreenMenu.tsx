@@ -244,7 +244,7 @@ export default function FullscreenMenu({
                             alt="Logo"
                             width={240}
                             height={80}
-                            className="h-14 sm:h-16 md:h-18 w-auto object-contain cursor-pointer"
+                            className="h-8 sm:h-9 md:h-10 w-auto object-contain cursor-pointer"
                             priority
                         />
                     </Link>

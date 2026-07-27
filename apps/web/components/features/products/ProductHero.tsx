@@ -45,7 +45,7 @@ export function ProductHero() {
   return (
     <section 
       ref={pageRef} 
-      className="px-6 pb-12 pt-36 md:pt-28 lg:pt-36 sm:px-8 max-w-4xl mx-auto text-center flex flex-col items-center justify-center min-h-[85vh]"
+      className="px-6 py-24 sm:px-8 max-w-4xl mx-auto text-center flex flex-col items-center justify-center min-h-screen"
     >
       <p className="hero-eyebrow mb-4 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#6f5f4a] whitespace-nowrap">
         Elite Tiles &amp; Sanitary Ware
@@ -78,10 +78,15 @@ export function ProductHero() {
       <div className="mt-10 flex flex-col sm:flex-row w-full max-w-[280px] sm:max-w-none mx-auto items-center justify-center gap-4">
         <button
           onClick={() => {
-            window.scrollTo({
-              top: window.innerHeight,
-              behavior: "smooth",
-            });
+            const catalogEl = document.getElementById("product-catalog");
+            if (catalogEl) {
+              catalogEl.scrollIntoView({ behavior: "smooth" });
+            } else {
+              window.scrollTo({
+                top: window.innerHeight,
+                behavior: "smooth",
+              });
+            }
           }}
           className="hero-cta-btn flex w-full sm:w-auto items-center justify-center rounded-full bg-[#121212] px-7 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-[#2b2b2b]"
         >

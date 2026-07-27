@@ -85,7 +85,7 @@ export default async function ProductsPage({
       {/* Hero Section */}
       <ProductHero />
 
-      <main className="pb-20">
+      <main id="product-catalog" className="pb-20 pt-10">
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 xl:px-16">
           <FadeIn>
 

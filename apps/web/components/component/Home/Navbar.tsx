@@ -200,8 +200,8 @@ export default function Navbar({
             height={70}
             className={`hidden lg:flex w-auto cursor-pointer ${
               isLightStyle 
-                ? "h-10 sm:h-11 lg:h-13 xl:h-14" 
-                : "h-9 sm:h-10 lg:h-12 xl:h-13"
+                ? "h-7 sm:h-8 lg:h-9 xl:h-10" 
+                : "h-7 sm:h-8 lg:h-9 xl:h-10"
             }`}
             priority
           />
@@ -263,8 +263,8 @@ export default function Navbar({
                 height={70}
                 className={`w-auto cursor-pointer ${
                   isLightStyle 
-                    ? "h-8 sm:h-9 lg:h-10 xl:h-11" 
-                    : "h-8 sm:h-9 lg:h-10 xl:h-11"
+                    ? "h-6 sm:h-7 lg:h-8 xl:h-9" 
+                    : "h-6 sm:h-7 lg:h-8 xl:h-9"
                 }`}
                 priority
               />

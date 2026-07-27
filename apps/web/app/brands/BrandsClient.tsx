@@ -160,7 +160,7 @@ export default function BrandsClient({ brands: dbBrands = [] }: BrandsClientProp
         <FullscreenMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
         {/* ── Hero Section ── */}
-        <section className="px-6 pb-12 pt-36 md:pt-28 lg:pt-36 sm:px-8 max-w-4xl mx-auto text-center flex flex-col items-center justify-center min-h-[85vh]">
+        <section className="px-6 py-24 sm:px-8 max-w-4xl mx-auto text-center flex flex-col items-center justify-center min-h-screen">
           <p className="hero-eyebrow mb-4 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#6f5f4a] whitespace-nowrap">
             Elite Tiles &amp; Sanitary Ware
           </p>
