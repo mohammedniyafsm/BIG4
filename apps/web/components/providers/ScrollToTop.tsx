@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { Suspense, useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 
-export default function ScrollToTop() {
+function ScrollToTopInner() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     // Disable browser automatic scroll restoration
@@ -12,7 +13,7 @@ export default function ScrollToTop() {
       window.history.scrollRestoration = "manual";
     }
 
-    // Force instant scroll to top on route/pathname change
+    // Force instant scroll to top on route/pathname/params change
     window.scrollTo({
       top: 0,
       left: 0,
@@ -25,7 +26,15 @@ export default function ScrollToTop() {
         (window as any).ScrollTrigger.refresh();
       }, 50);
     }
-  }, [pathname]);
+  }, [pathname, searchParams]);
 
   return null;
+}
+
+export default function ScrollToTop() {
+  return (
+    <Suspense fallback={null}>
+      <ScrollToTopInner />
+    </Suspense>
+  );
 }
