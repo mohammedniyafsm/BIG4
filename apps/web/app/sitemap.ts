@@ -2,8 +2,7 @@ import { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/config/site";
 import { getCategories, getProducts } from "@/lib/api";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.website.replace(/\/$/, "");

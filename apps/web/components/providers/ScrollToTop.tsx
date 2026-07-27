@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function ScrollToTop() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     // Disable browser automatic scroll restoration
@@ -26,7 +25,7 @@ export default function ScrollToTop() {
         (window as any).ScrollTrigger.refresh();
       }, 50);
     }
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }
