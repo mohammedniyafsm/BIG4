@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
+import Link from 'next/link';
 
 export default function ScrollyCanvas({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -99,9 +100,9 @@ export default function ScrollyCanvas({ heroRef }: { heroRef: React.RefObject<HT
       )}
 
       {/* Brand Button */}
-      <button className="absolute bottom-11 right-8 md:bottom-13 md:right-12 z-50 bg-white text-black px-6 py-3 md:px-10 md:py-4 rounded-full uppercase text-xs md:text-base font-bold tracking-widest shadow-lg hover:scale-105 transition-transform duration-300">
+      <Link href="/brands" className="absolute bottom-11 right-8 md:bottom-13 md:right-12 z-50 bg-white text-black px-6 py-3 md:px-10 md:py-4 rounded-full uppercase text-xs md:text-base font-bold tracking-widest shadow-lg hover:scale-105 transition-transform duration-300">
         Italus
-      </button>
+      </Link>
 
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>

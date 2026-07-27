@@ -4,17 +4,21 @@ import { useState, useEffect } from "react";
 import { LoadingButton } from "@/components/ui/LoadingButton";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/ui/ToastProvider";
+import { BrandImageUploader } from "@/components/brands/BrandImageUploader";
 import {
     createBrandAction,
     updateBrandAction,
     deleteBrandAction,
 } from "@/actions/brand.actions";
-import { createBrandSchema, updateBrandSchema } from "@/validations/brand.validation";
 
-interface BrandItem {
+export interface BrandItem {
     id: string;
     name: string;
     slug: string;
+    imageUrl?: string | null;
+    imagePublicId?: string | null;
+    displayOrder: number;
+    isActive: boolean;
     _count: { products: number };
 }
 
@@ -26,86 +30,78 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
     const { toast } = useToast();
     const [brands, setBrands] = useState(initialBrands);
 
-    // Sync state when props change (e.g. pagination)
     useEffect(() => {
         setBrands(initialBrands);
     }, [initialBrands]);
 
-    // Create
-    const [newName, setNewName] = useState("");
-    const [creating, setCreating] = useState(false);
-    const [createError, setCreateError] = useState("");
+    // Modal state
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editingBrand, setEditingBrand] = useState<BrandItem | null>(null);
 
-    // Edit
-    const [editId, setEditId] = useState<string | null>(null);
-    const [editName, setEditName] = useState("");
+    // Form fields
+    const [name, setName] = useState("");
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [imagePublicId, setImagePublicId] = useState<string | null>(null);
+    const [displayOrder, setDisplayOrder] = useState<number>(0);
+    const [isActive, setIsActive] = useState<boolean>(true);
+
     const [saving, setSaving] = useState(false);
-    const [editError, setEditError] = useState("");
+    const [formError, setFormError] = useState("");
 
-    // Delete
+    // Delete target
     const [deleteTarget, setDeleteTarget] = useState<BrandItem | null>(null);
     const [deleting, setDeleting] = useState(false);
 
-    const handleCreate = async () => {
-        setCreateError("");
-        
-        const parsed = createBrandSchema.safeParse({ name: newName });
-        if (!parsed.success) {
-            setCreateError(parsed.error.flatten().fieldErrors.name?.[0] || "Invalid name");
-            document.getElementById("create-brand-input")?.focus();
-            return;
-        }
-        
-        setCreating(true);
-        const result = await createBrandAction(parsed.data.name);
-        setCreating(false);
-
-        if (result.success) {
-            toast("Brand created", "success");
-            setNewName("");
-            window.location.reload();
-        } else {
-            if (result.errors?.name) {
-                setCreateError(result.errors.name[0]);
-                document.getElementById("create-brand-input")?.focus();
-            } else {
-                toast(result.message, "error");
-            }
-        }
+    const openCreateModal = () => {
+        setEditingBrand(null);
+        setName("");
+        setImageUrl(null);
+        setImagePublicId(null);
+        setDisplayOrder(brands.length);
+        setIsActive(true);
+        setFormError("");
+        setModalOpen(true);
     };
 
-    const handleUpdate = async (id: string, originalName: string) => {
-        setEditError("");
-        
-        const parsed = updateBrandSchema.safeParse({ name: editName });
-        if (!parsed.success) {
-            setEditError(parsed.error.flatten().fieldErrors.name?.[0] || "Invalid name");
-            document.getElementById(`edit-brand-${id}`)?.focus();
+    const openEditModal = (brand: BrandItem) => {
+        setEditingBrand(brand);
+        setName(brand.name);
+        setImageUrl(brand.imageUrl || null);
+        setImagePublicId(brand.imagePublicId || null);
+        setDisplayOrder(brand.displayOrder || 0);
+        setIsActive(brand.isActive ?? true);
+        setFormError("");
+        setModalOpen(true);
+    };
+
+    const handleSave = async () => {
+        setFormError("");
+
+        if (!name.trim() || name.trim().length < 2) {
+            setFormError("Brand name must be at least 2 characters");
             return;
         }
 
-        if (parsed.data.name === originalName) {
-            setEditId(null);
-            return;
-        }
+        const payload = {
+            name: name.trim(),
+            imageUrl,
+            imagePublicId,
+            displayOrder: Number(displayOrder) || 0,
+            isActive,
+        };
 
         setSaving(true);
-        const result = await updateBrandAction(id, parsed.data.name);
+        const result = editingBrand
+            ? await updateBrandAction(editingBrand.id, payload)
+            : await createBrandAction(payload);
         setSaving(false);
 
         if (result.success) {
-            toast("Brand updated", "success");
-            setEditId(null);
-            setBrands((prev) =>
-                prev.map((b) => (b.id === id ? { ...b, name: parsed.data.name } : b))
-            );
+            toast(editingBrand ? "Brand updated successfully" : "Brand created successfully", "success");
+            setModalOpen(false);
+            window.location.reload();
         } else {
-            if (result.errors?.name) {
-                setEditError(result.errors.name[0]);
-                document.getElementById(`edit-brand-${id}`)?.focus();
-            } else {
-                toast(result.message, "error");
-            }
+            setFormError(result.message || "Failed to save brand");
         }
     };
 
@@ -127,254 +123,84 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
 
     return (
         <>
-            {/* Create new brand */}
-            <div style={{ marginBottom: 24 }}>
-                <div style={{ display: "flex", gap: 12 }}>
-                    <input
-                        id="create-brand-input"
-                        type="text"
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-                        placeholder="New brand name…"
+            <div style={{ marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                    <button
+                        onClick={openCreateModal}
                         style={{
-                            flex: 1,
-                            maxWidth: 400,
-                            padding: "12px 16px",
-                            border: `1px solid ${createError ? "var(--danger)" : "var(--border-default)"}`,
+                            padding: "10px 24px",
                             borderRadius: "var(--radius-pill)",
+                            background: "var(--hero-bg)",
+                            color: "var(--hero-text)",
+                            border: "none",
                             fontSize: 14,
-                            outline: "none",
-                            background: "var(--bg-card)",
-                            color: "var(--text-primary)",
-                            boxShadow: "var(--shadow-sm)",
+                            fontWeight: 600,
+                            cursor: "pointer",
+                            boxShadow: "var(--shadow-sm)"
                         }}
-                        aria-invalid={!!createError}
-                        aria-describedby={createError ? "create-error" : undefined}
-                    />
-                    <LoadingButton loading={creating} onClick={handleCreate} style={{ borderRadius: "var(--radius-pill)", background: "var(--hero-bg)" }}>
-                        + Add Brand
-                    </LoadingButton>
+                    >
+                        + Add New Brand
+                    </button>
                 </div>
-                {createError && <span id="create-error" style={{ display: "block", marginTop: 8, fontSize: 13, color: "var(--danger)" }}>{createError}</span>}
             </div>
 
-            {/* Brand list */}
             <div className="saas-card saas-table-container" style={{ padding: 0, overflow: "hidden" }}>
                 {brands.length === 0 ? (
                     <div style={{ textAlign: "center", padding: "60px 20px" }}>
                         <div style={{ fontSize: 40, marginBottom: 12 }}>🏷️</div>
                         <div style={{ fontWeight: 600, color: "var(--text-primary)" }}>No brands yet</div>
-                        <div style={{ marginTop: 4, color: "var(--text-secondary)", fontSize: 14 }}>Create your first brand above</div>
+                        <div style={{ marginTop: 4, color: "var(--text-secondary)", fontSize: 14 }}>Create your first brand to display on the storefront</div>
                     </div>
                 ) : (
-                    <>
-                        {/* Desktop Table */}
-                        <div className="hide-on-mobile" style={{ overflowX: "auto" }}>
-                            <table className="saas-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th style={{ textAlign: "center" }}>Products</th>
-                                        <th style={{ textAlign: "center", width: 180 }}>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {brands.map((brand) => (
-                                        <tr key={brand.id}>
-                                            <td>
-                                                {editId === brand.id ? (
-                                                    <div style={{ display: "flex", flexDirection: "column" }}>
-                                                        <input
-                                                            id={`edit-brand-${brand.id}`}
-                                                            type="text"
-                                                            value={editName}
-                                                            onChange={(e) => setEditName(e.target.value)}
-                                                            onKeyDown={(e) => {
-                                                                if (e.key === "Enter") handleUpdate(brand.id, brand.name);
-                                                                if (e.key === "Escape") setEditId(null);
-                                                            }}
-                                                            autoFocus
-                                                            style={{
-                                                                padding: "8px 12px",
-                                                                border: `2px solid ${editError ? "var(--danger)" : "var(--text-primary)"}`,
-                                                                borderRadius: "var(--radius-md)",
-                                                                fontSize: 14,
-                                                                outline: "none",
-                                                                width: "100%",
-                                                                maxWidth: 300,
-                                                                background: "var(--bg-canvas)",
-                                                                color: "var(--text-primary)",
-                                                            }}
-                                                            aria-invalid={!!editError}
-                                                            aria-describedby={editError ? `edit-error-${brand.id}` : undefined}
-                                                        />
-                                                        {editError && <span id={`edit-error-${brand.id}`} style={{ display: "block", marginTop: 4, fontSize: 12, color: "var(--danger)" }}>{editError}</span>}
-                                                    </div>
-                                                ) : (
-                                                    <span style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>
-                                                        {brand.name}
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td style={{ textAlign: "center" }}>
-                                                <span className={`badge ${brand._count.products > 0 ? "badge-active" : "badge-archived"}`}>
-                                                    {brand._count.products} Products
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                                                    {editId === brand.id ? (
-                                                        <>
-                                                            <LoadingButton
-                                                                variant="primary"
-                                                                loading={saving}
-                                                                disabled={editName.trim() === brand.name}
-                                                                onClick={() => handleUpdate(brand.id, brand.name)}
-                                                                style={{ padding: "6px 16px", borderRadius: "var(--radius-pill)", fontSize: 13, background: "var(--hero-bg)" }}
-                                                            >
-                                                                Save
-                                                            </LoadingButton>
-                                                            <button
-                                                                onClick={() => setEditId(null)}
-                                                                style={{
-                                                                    padding: "6px 16px",
-                                                                    borderRadius: "var(--radius-pill)",
-                                                                    border: "1px solid var(--border-default)",
-                                                                    background: "var(--bg-card)",
-                                                                    color: "var(--text-primary)",
-                                                                    fontSize: 13,
-                                                                    fontWeight: 600,
-                                                                    cursor: "pointer",
-                                                                }}
-                                                            >
-                                                                Cancel
-                                                            </button>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <button
-                                                                onClick={() => {
-                                                                    setEditId(brand.id);
-                                                                    setEditName(brand.name);
-                                                                }}
-                                                                style={{
-                                                                    padding: "6px 16px",
-                                                                    borderRadius: "var(--radius-pill)",
-                                                                    border: "1px solid var(--border-default)",
-                                                                    background: "var(--bg-card)",
-                                                                    color: "var(--text-primary)",
-                                                                    fontSize: 13,
-                                                                    fontWeight: 600,
-                                                                    cursor: "pointer",
-                                                                }}
-                                                            >
-                                                                Rename
-                                                            </button>
-                                                            <button
-                                                                onClick={() => setDeleteTarget(brand)}
-                                                                style={{
-                                                                    padding: "6px 16px",
-                                                                    borderRadius: "var(--radius-pill)",
-                                                                    border: "1px solid var(--danger-soft)",
-                                                                    background: "var(--danger-soft)",
-                                                                    color: "var(--danger)",
-                                                                    fontSize: 13,
-                                                                    fontWeight: 600,
-                                                                    cursor: "pointer",
-                                                                }}
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </>
-                                                    )}
+                    <div style={{ overflowX: "auto" }}>
+                        <table className="saas-table">
+                            <thead>
+                                <tr>
+                                    <th style={{ width: 80 }}>Logo / Image</th>
+                                    <th>Name & Slug</th>
+                                    <th style={{ textAlign: "center" }}>Order</th>
+                                    <th style={{ textAlign: "center" }}>Status</th>
+                                    <th style={{ textAlign: "center" }}>Products</th>
+                                    <th style={{ textAlign: "right", width: 160 }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {brands.map((brand) => (
+                                    <tr key={brand.id}>
+                                        <td>
+                                            {brand.imageUrl ? (
+                                                <div style={{ width: 44, height: 33, borderRadius: 6, overflow: "hidden", border: "1px solid var(--border-default)", background: "var(--bg-canvas)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <img src={brand.imageUrl} alt={brand.name} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        {/* Mobile Cards */}
-                        <div className="mobile-only">
-                            {brands.map((brand, i) => (
-                                <div key={brand.id} style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, borderTop: i > 0 ? "1px solid var(--border-default)" : "none" }}>
-                                    {editId === brand.id ? (
-                                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                                            <div>
-                                                <input
-                                                    id={`edit-brand-mobile-${brand.id}`}
-                                                    type="text"
-                                                    value={editName}
-                                                    onChange={(e) => setEditName(e.target.value)}
-                                                    onKeyDown={(e) => {
-                                                        if (e.key === "Enter") handleUpdate(brand.id, brand.name);
-                                                        if (e.key === "Escape") setEditId(null);
-                                                    }}
-                                                    autoFocus
-                                                    style={{
-                                                        padding: "12px 16px",
-                                                        border: `2px solid ${editError ? "var(--danger)" : "var(--text-primary)"}`,
-                                                        borderRadius: "var(--radius-md)",
-                                                        fontSize: 16,
-                                                        outline: "none",
-                                                        width: "100%",
-                                                        background: "var(--bg-canvas)",
-                                                        color: "var(--text-primary)",
-                                                    }}
-                                                    aria-invalid={!!editError}
-                                                    aria-describedby={editError ? `edit-error-mobile-${brand.id}` : undefined}
-                                                />
-                                                {editError && <span id={`edit-error-mobile-${brand.id}`} style={{ display: "block", marginTop: 4, fontSize: 13, color: "var(--danger)" }}>{editError}</span>}
-                                            </div>
-                                            <div style={{ display: "flex", gap: 8 }}>
-                                                <LoadingButton
-                                                    variant="primary"
-                                                    loading={saving}
-                                                    disabled={editName.trim() === brand.name}
-                                                    onClick={() => handleUpdate(brand.id, brand.name)}
-                                                    style={{ flex: 1, padding: "10px", borderRadius: "var(--radius-pill)", fontSize: 14, background: "var(--hero-bg)" }}
-                                                >
-                                                    Save
-                                                </LoadingButton>
+                                            ) : (
+                                                <div style={{ width: 44, height: 33, borderRadius: 6, background: "var(--bg-canvas)", border: "1px dashed var(--border-strong)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "var(--text-muted)", fontWeight: 700 }}>
+                                                    NO IMG
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <div style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>{brand.name}</div>
+                                            <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2 }}>slug: {brand.slug}</div>
+                                        </td>
+                                        <td style={{ textAlign: "center", fontWeight: 500, fontSize: 13, color: "var(--text-secondary)" }}>
+                                            {brand.displayOrder}
+                                        </td>
+                                        <td style={{ textAlign: "center" }}>
+                                            <span className={`badge ${brand.isActive ? "badge-active" : "badge-archived"}`}>
+                                                {brand.isActive ? "Active" : "Hidden"}
+                                            </span>
+                                        </td>
+                                        <td style={{ textAlign: "center" }}>
+                                            <span style={{ fontSize: 13, color: "var(--text-secondary)", fontWeight: 500 }}>
+                                                {brand._count.products} Products
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                                                 <button
-                                                    onClick={() => setEditId(null)}
+                                                    onClick={() => openEditModal(brand)}
                                                     style={{
-                                                        flex: 1,
-                                                        padding: "10px",
-                                                        borderRadius: "var(--radius-pill)",
-                                                        border: "1px solid var(--border-default)",
-                                                        background: "var(--bg-card)",
-                                                        color: "var(--text-primary)",
-                                                        fontSize: 14,
-                                                        fontWeight: 600,
-                                                        cursor: "pointer",
-                                                    }}
-                                                >
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                                <span style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 16 }}>
-                                                    {brand.name}
-                                                </span>
-                                                <span className={`badge ${brand._count.products > 0 ? "badge-active" : "badge-archived"}`}>
-                                                    {brand._count.products} Products
-                                                </span>
-                                            </div>
-                                            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-                                                <button
-                                                    onClick={() => {
-                                                        setEditId(brand.id);
-                                                        setEditName(brand.name);
-                                                    }}
-                                                    style={{
-                                                        flex: 1,
-                                                        padding: "8px",
+                                                        padding: "6px 14px",
                                                         borderRadius: "var(--radius-pill)",
                                                         border: "1px solid var(--border-default)",
                                                         background: "var(--bg-card)",
@@ -384,13 +210,12 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
                                                         cursor: "pointer",
                                                     }}
                                                 >
-                                                    Rename
+                                                    Edit
                                                 </button>
                                                 <button
                                                     onClick={() => setDeleteTarget(brand)}
                                                     style={{
-                                                        flex: 1,
-                                                        padding: "8px",
+                                                        padding: "6px 14px",
                                                         borderRadius: "var(--radius-pill)",
                                                         border: "1px solid var(--danger-soft)",
                                                         background: "var(--danger-soft)",
@@ -403,14 +228,127 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
                                                     Delete
                                                 </button>
                                             </div>
-                                        </>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
+
+            {/* Brand Edit/Create Modal */}
+            {modalOpen && (
+                <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "var(--overlay)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+                    <div className="responsive-modal" style={{ background: "var(--bg-card)", borderRadius: "var(--radius-xl)", width: "100%", maxWidth: 540, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "var(--shadow-drawer)" }}>
+                        <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--border-default)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text-primary)" }}>
+                                {editingBrand ? "Edit Brand" : "Create New Brand"}
+                            </h2>
+                            <button onClick={() => setModalOpen(false)} style={{ background: "transparent", border: "none", fontSize: 24, color: "var(--text-secondary)", cursor: "pointer", lineHeight: 1 }}>×</button>
+                        </div>
+
+                        <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20, maxHeight: "75vh", overflowY: "auto" }}>
+                            {formError && (
+                                <div style={{ padding: "10px 14px", background: "var(--danger-soft)", border: "1px solid rgba(255,59,48,0.2)", borderRadius: "var(--radius-md)", color: "var(--danger)", fontSize: 13, fontWeight: 500 }}>
+                                    {formError}
+                                </div>
+                            )}
+
+                            {/* Name */}
+                            <div>
+                                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 6 }}>
+                                    Brand Name *
+                                </label>
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="e.g. Kajaria, Simpolo, Grohe..."
+                                    style={{
+                                        width: "100%",
+                                        padding: "12px 16px",
+                                        border: "1px solid var(--border-strong)",
+                                        borderRadius: "var(--radius-md)",
+                                        fontSize: 14,
+                                        outline: "none",
+                                        background: "var(--bg-canvas)",
+                                        color: "var(--text-primary)",
+                                    }}
+                                />
+                            </div>
+
+                            {/* Image Uploader */}
+                            <BrandImageUploader
+                                currentImage={imageUrl}
+                                currentPublicId={imagePublicId}
+                                onImageChange={(url, publicId) => {
+                                    setImageUrl(url);
+                                    setImagePublicId(publicId);
+                                }}
+                            />
+
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                                {/* Display Order */}
+                                <div>
+                                    <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 6 }}>
+                                        Display Order
+                                    </label>
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        value={displayOrder}
+                                        onChange={(e) => setDisplayOrder(parseInt(e.target.value, 10) || 0)}
+                                        style={{
+                                            width: "100%",
+                                            padding: "12px 16px",
+                                            border: "1px solid var(--border-strong)",
+                                            borderRadius: "var(--radius-md)",
+                                            fontSize: 14,
+                                            outline: "none",
+                                            background: "var(--bg-canvas)",
+                                            color: "var(--text-primary)",
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Active Toggle */}
+                                <div>
+                                    <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 6 }}>
+                                        Visibility
+                                    </label>
+                                    <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, cursor: "pointer", fontSize: 14, fontWeight: 500 }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={isActive}
+                                            onChange={(e) => setIsActive(e.target.checked)}
+                                            style={{ width: 18, height: 18, accentColor: "var(--hero-bg)" }}
+                                        />
+                                        <span>Show on Storefront</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ padding: "16px 24px", borderTop: "1px solid var(--border-default)", background: "var(--bg-canvas)", display: "flex", justifyContent: "flex-end", gap: 12 }}>
+                            <button
+                                type="button"
+                                onClick={() => setModalOpen(false)}
+                                style={{ padding: "10px 24px", borderRadius: "var(--radius-pill)", border: "1px solid var(--border-strong)", background: "var(--bg-card)", color: "var(--text-primary)", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+                            >
+                                Cancel
+                            </button>
+                            <LoadingButton
+                                loading={saving}
+                                onClick={handleSave}
+                                style={{ padding: "10px 24px", borderRadius: "var(--radius-pill)", background: "var(--hero-bg)" }}
+                            >
+                                {editingBrand ? "Save Changes" : "Create Brand"}
+                            </LoadingButton>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <ConfirmDialog
                 open={!!deleteTarget}
@@ -419,11 +357,11 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
                     deleteTarget
                         ? `Are you sure you want to delete "${deleteTarget.name}"? ${deleteTarget._count.products > 0
                             ? `This brand has ${deleteTarget._count.products} product(s) — you must reassign them first.`
-                            : "This action cannot be undone."
+                            : "This action cannot be undone and will delete the associated logo asset."
                         }`
                         : ""
                 }
-                confirmLabel="Delete"
+                confirmLabel="Delete Brand"
                 variant="danger"
                 loading={deleting}
                 onConfirm={handleDelete}

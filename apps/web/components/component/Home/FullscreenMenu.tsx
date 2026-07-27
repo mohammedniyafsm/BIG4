@@ -229,28 +229,29 @@ export default function FullscreenMenu({
     return (
         <div
             ref={menuRef}
-            className="fixed inset-0 z-[15000] hidden bg-white "
+            className="fixed inset-0 z-[99999] hidden w-full h-full min-h-screen bg-white text-black opacity-100"
+            style={{ backgroundColor: "#ffffff" }}
         >
-            <div className="flex h-screen flex-col px-6 sm:px-6 lg:px-8 xl:px-8 py-8 lg:py-10">
+            <div className="flex h-screen w-full flex-col p-0 bg-white text-black opacity-100" style={{ backgroundColor: "#ffffff" }}>
 
                 {/* Header */}
 
-                <header className="flex items-center justify-between px-6 md:px-10 xl:px-16 py-6">
+                <header className="flex items-center justify-between px-6 sm:px-10 lg:px-16 pt-6 pb-2">
 
-                    <Link href="/" className="menu-logo">
+                    <Link href="/" className="menu-logo flex items-center">
                         <Image
                             src="/images/branding/logo2.png"
                             alt="Logo"
-                            width={220}
-                            height={70}
-                            className="h-14 sm:h-18 lg:h-20 xl:h-22 w-auto cursor-pointer"
+                            width={240}
+                            height={80}
+                            className="h-14 sm:h-16 md:h-18 w-auto object-contain cursor-pointer"
                             priority
                         />
                     </Link>
 
                     <button
                         onClick={() => setMenuOpen(false)}
-                        className="menu-close text-black text-3xl leading-none hover:opacity-70 transition-opacity"
+                        className="menu-close text-black text-4xl sm:text-5xl leading-none flex items-center justify-center p-1 hover:opacity-70 transition-opacity"
                         aria-label="Close menu"
                     >
                         ×
@@ -264,7 +265,7 @@ export default function FullscreenMenu({
 
                         {/* HOME */}
                         <Link href="/" onClick={() => setMenuOpen(false)} className="menu-item overflow-hidden cursor-pointer" onMouseEnter={handleItemEnter} onMouseLeave={handleItemLeave}>
-                            <div className="menu-cube  relative inline-flex w-fit items-center justify-center overflow-hidden leading-none whitespace-nowrap">
+                            <div className="menu-cube relative inline-flex w-fit items-center justify-center overflow-hidden leading-none whitespace-nowrap">
                                 {renderDualLayerText("HOME")}
                             </div>
                         </Link>
@@ -273,13 +274,6 @@ export default function FullscreenMenu({
                         <Link href="/about" onClick={() => setMenuOpen(false)} className="menu-item overflow-hidden cursor-pointer" onMouseEnter={handleItemEnter} onMouseLeave={handleItemLeave}>
                             <div className="menu-cube relative inline-flex w-fit items-center justify-center overflow-hidden leading-none whitespace-nowrap">
                                 {renderDualLayerText("ABOUT")}
-                            </div>
-                        </Link>
-
-                        {/* BRANDS */}
-                        <Link href="/brands" onClick={() => setMenuOpen(false)} className="menu-item overflow-hidden cursor-pointer" onMouseEnter={handleItemEnter} onMouseLeave={handleItemLeave}>
-                            <div className="menu-cube relative inline-flex w-fit items-center justify-center overflow-hidden leading-none whitespace-nowrap">
-                                {renderDualLayerText("BRANDS")}
                             </div>
                         </Link>
 
@@ -294,6 +288,13 @@ export default function FullscreenMenu({
                         <Link href="/contact" onClick={() => setMenuOpen(false)} className="menu-item overflow-hidden cursor-pointer" onMouseEnter={handleItemEnter} onMouseLeave={handleItemLeave}>
                             <div className="menu-cube relative inline-flex w-fit items-center justify-center overflow-hidden leading-none whitespace-nowrap">
                                 {renderDualLayerText("CONTACT")}
+                            </div>
+                        </Link>
+
+                        {/* BRANDS */}
+                        <Link href="/brands" onClick={() => setMenuOpen(false)} className="menu-item overflow-hidden cursor-pointer" onMouseEnter={handleItemEnter} onMouseLeave={handleItemLeave}>
+                            <div className="menu-cube relative inline-flex w-fit items-center justify-center overflow-hidden leading-none whitespace-nowrap">
+                                {renderDualLayerText("BRANDS")}
                             </div>
                         </Link>
 

@@ -1,4 +1,5 @@
 import Header from "@/components/component/Home/Header";
+import dynamicImport from "next/dynamic";
 
 import Hero from "@/components/component/Home/Hero";
 import { FeaturedProducts } from "@/components/features/products/FeaturedProducts";
@@ -11,11 +12,13 @@ import InfiniteGallery from "@/components/component/Home/InfiniteGallery";
 import ScrollGallery from "@/components/component/Home/ScrollGallery";
 import ShowroomSection from "@/components/component/Home/ShowroomSection";
 import SiteFooter from "@/components/component/Home/Footer";
-import ThreeDComponent from "@/components/ThreeDComponent";
 import PageLoader from "@/components/ui/PageLoader";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+const ThreeDComponent = dynamicImport(
+  () => import("@/components/ThreeDComponent")
+);
+
+export const revalidate = 60;
 
 export default async function Home() {
     const { data: offers } = await getOffers();

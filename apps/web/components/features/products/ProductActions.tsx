@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/config/site";
 
 interface ProductActionsProps {
   product: {
@@ -38,23 +39,23 @@ export function ProductActions({ product }: ProductActionsProps) {
     ? (boxes * product.coveragePerBox! * effectivePrice) 
     : (quantity * effectivePrice);
 
-  // Build Enquire URL
-  const buildEnquireUrl = (isSample = false) => {
-    const params = new URLSearchParams();
-    params.set("product", product.name);
-    params.set("sku", product.sku);
-    if (isSample) params.set("sample", "true");
+  // Build WhatsApp URL
+  const buildWhatsAppUrl = (isSample = false) => {
+    const phone = "919353920365";
+    const productUrl = typeof window !== "undefined" && window.location.href 
+      ? window.location.href 
+      : `${siteConfig.website}/products/${product.slug}`;
+
+    const skuSegment = product.sku ? ` (SKU: ${product.sku})` : "";
     
-    if (isAreaCalc && isValidArea) {
-      params.set("quantity", `${boxes} boxes`);
-      params.set("area", `${actualCoverage.toFixed(3)} m²`);
-      params.set("estimatedTotal", formatPrice(total));
-    } else if (!isAreaCalc) {
-      params.set("quantity", `${quantity} ${product.priceUnit === "PER_PIECE" ? "pieces" : product.priceUnit === "PER_BOX" ? "boxes" : "sets"}`);
-      params.set("estimatedTotal", formatPrice(total));
+    let message = "";
+    if (isSample) {
+      message = `Hi Big4 OVLs, I'd like to request a *sample* for *${product.name}*${skuSegment}.\nPlease let me know the process and any charges involved.\nProduct link: ${productUrl}`;
+    } else {
+      message = `Hi Big4 OVLs, I'm interested in *${product.name}*${skuSegment}.\nCould you share more details, pricing, and availability?\nProduct link: ${productUrl}`;
     }
     
-    return `/contact?${params.toString()}`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   };
 
   const handleShare = () => {
@@ -145,11 +146,15 @@ export function ProductActions({ product }: ProductActionsProps) {
       {/* Desktop Actions */}
       <div className="hidden lg:flex flex-col mt-8 pt-8 border-t border-border gap-4">
         <Button size="lg" className="h-12 px-8 text-[16px] font-semibold rounded-[var(--radius-lg)] w-full" asChild>
-          <a href={buildEnquireUrl(false)}>Enquire Now</a>
+          <a href={buildWhatsAppUrl(false)} target="_blank" rel="noopener noreferrer">
+            Enquire Now
+          </a>
         </Button>
         <div className="flex gap-4">
           <Button size="lg" variant="outline" className="h-10 flex-1 rounded-[var(--radius-md)] text-[14px]" asChild>
-            <a href={buildEnquireUrl(true)}>Get a Sample</a>
+            <a href={buildWhatsAppUrl(true)} target="_blank" rel="noopener noreferrer">
+              Get a Sample
+            </a>
           </Button>
           <Button size="lg" variant="outline" className="h-10 flex-1 rounded-[var(--radius-md)] text-[14px]" onClick={handleShare}>
             Share
@@ -158,20 +163,18 @@ export function ProductActions({ product }: ProductActionsProps) {
       </div>
 
       {/* Mobile Sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-background/95 backdrop-blur shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] border-t border-border flex items-center justify-between gap-4 transition-all">
-        <div className="flex flex-col min-w-[100px]">
-          <span className="text-micro text-muted-foreground">
-            {(isAreaCalc && isValidArea) || (!isAreaCalc && quantity > 1) ? "Total" : "Price"}
-          </span>
-          <span className="text-[20px] font-bold text-foreground leading-none mt-1">
-            {formatPrice(total)}
-          </span>
-        </div>
-        <Button size="lg" className="flex-1 h-12 text-[16px] font-semibold rounded-[var(--radius-lg)]" asChild>
-          <a href={buildEnquireUrl(false)}>Enquire Now</a>
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-background/95 backdrop-blur shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] border-t border-border flex items-center justify-between gap-3 transition-all">
+        <Button size="lg" variant="outline" className="h-12 text-[14px] font-semibold rounded-[var(--radius-lg)] px-3 shrink-0" asChild>
+          <a href={buildWhatsAppUrl(true)} target="_blank" rel="noopener noreferrer">
+            Get a Sample
+          </a>
+        </Button>
+        <Button size="lg" className="flex-1 h-12 text-[15px] font-semibold rounded-[var(--radius-lg)]" asChild>
+          <a href={buildWhatsAppUrl(false)} target="_blank" rel="noopener noreferrer">
+            Enquire Now
+          </a>
         </Button>
       </div>
     </>
   );
 }
-

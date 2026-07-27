@@ -91,9 +91,9 @@ export default function SiteFooter({
   const navLinks = [
     "HOME",
     "ABOUT",
-    "BRANDS",
-    "CONTACT",
     "PRODUCTS",
+    "CONTACT",
+    "BRANDS",
   ];
 
   return (

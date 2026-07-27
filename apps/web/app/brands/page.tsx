@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import BrandsClient from "./BrandsClient";
 import { siteConfig } from "@/lib/config/site";
+import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Authorized Brands | Kajaria, Simpolo & Grohe Dealer in Sullia",
@@ -23,6 +23,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BrandsPage() {
-  return <BrandsClient />;
+export default async function BrandsPage() {
+  const brands = await prisma.brand.findMany({
+    where: {
+      isActive: true,
+    },
+    orderBy: [
+      { displayOrder: "asc" },
+      { name: "asc" },
+    ],
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      imageUrl: true,
+    },
+  });
+
+  return <BrandsClient brands={brands} />;
 }

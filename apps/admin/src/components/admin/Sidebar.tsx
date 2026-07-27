@@ -75,7 +75,23 @@ export function Sidebar({ open, onClose, isMobile }: SidebarProps) {
                     transition: "transform 250ms ease",
                 }}
             >
-
+                {/* Brand Logo Header */}
+                <div style={{ height: 64, minHeight: 64, maxHeight: 64, padding: "0 20px", display: "flex", alignItems: "center", borderBottom: "1px solid var(--border-default)", boxSizing: "border-box", flexShrink: 0 }}>
+                    <Link href="/admin" style={{ display: "flex", alignItems: "center" }}>
+                        <img
+                            src="/logo2.png"
+                            alt="Big4 Logo"
+                            className="light-logo"
+                            style={{ height: 28, width: "auto", objectFit: "contain" }}
+                        />
+                        <img
+                            src="/logo3.png"
+                            alt="Big4 Logo"
+                            className="dark-logo"
+                            style={{ height: 32, width: "auto", objectFit: "contain" }}
+                        />
+                    </Link>
+                </div>
 
                 {/* Navigation */}
                 <nav style={{ padding: "12px 8px", flex: 1 }}>

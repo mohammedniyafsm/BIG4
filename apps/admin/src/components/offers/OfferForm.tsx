@@ -28,7 +28,13 @@ export function OfferForm({ initialData }: OfferFormProps) {
     const [discountText, setDiscountText] = useState(initialData?.discountText ?? "");
     const [bannerImage, setBannerImage] = useState(initialData?.bannerImage ?? "");
     const [bannerImageMobile, setBannerImageMobile] = useState(initialData?.bannerImageMobile ?? "");
-    const [linkType, setLinkType] = useState(initialData?.linkType ?? "NONE");
+    
+    // Only allow WhatsApp, External Website, and Instagram Reel Link
+    const [linkType, setLinkType] = useState<string>(
+        initialData?.linkType && ["WHATSAPP", "EXTERNAL_URL", "INSTAGRAM_REEL"].includes(initialData.linkType)
+            ? initialData.linkType
+            : "WHATSAPP"
+    );
     const [linkValue, setLinkValue] = useState(initialData?.linkValue ?? "");
     const [isActive, setIsActive] = useState(initialData?.isActive ?? true);
     
@@ -47,7 +53,7 @@ export function OfferForm({ initialData }: OfferFormProps) {
             bannerImage,
             bannerImageMobile: bannerImageMobile || null,
             linkType,
-            linkValue: linkType !== "NONE" ? linkValue.trim() : null,
+            linkValue: linkValue.trim() || null,
             isActive,
             startDate: startDate || null,
             endDate: endDate || null,
@@ -179,47 +185,41 @@ export function OfferForm({ initialData }: OfferFormProps) {
                             <select
                                 id="linkType"
                                 value={linkType}
-                                onChange={(e) => setLinkType(e.target.value as any)}
+                                onChange={(e) => setLinkType(e.target.value)}
                                 style={{ ...getInputStyle(false), paddingRight: 32, appearance: "none" }}
                             >
-                                <option value="NONE">No link (Not Clickable)</option>
                                 <option value="WHATSAPP">WhatsApp Message</option>
                                 <option value="EXTERNAL_URL">External Website</option>
-                                <option value="PRODUCT">Specific Product ID/Slug</option>
-                                <option value="CATEGORY">Specific Category Slug</option>
+                                <option value="INSTAGRAM_REEL">Instagram Reel Link</option>
                             </select>
                         </div>
 
-                        {linkType !== "NONE" && (
-                            <div>
-                                <label htmlFor="linkValue" style={labelStyle}>
-                                    {linkType === "WHATSAPP" ? "WhatsApp Number" :
-                                     linkType === "EXTERNAL_URL" ? "URL (https://...)" :
-                                     linkType === "PRODUCT" ? "Product Slug or ID" :
-                                     "Category Slug"} *
-                                </label>
-                                <input
-                                    id="linkValue"
-                                    type="text"
-                                    value={linkValue}
-                                    onChange={(e) => setLinkValue(e.target.value)}
-                                    placeholder={
-                                        linkType === "WHATSAPP" ? "e.g. 919876543210" :
-                                        linkType === "EXTERNAL_URL" ? "https://example.com" :
-                                        "e.g. premium-floor-tile"
-                                    }
-                                    style={getInputStyle(!!errors.linkValue)}
-                                    required={(linkType as string) !== "NONE"}
-                                />
-                                {errors.linkValue && <span style={{ display: "block", marginTop: 4, fontSize: 12, color: "var(--danger)" }}>{errors.linkValue[0]}</span>}
-                                
-                                {linkType === "WHATSAPP" && (
-                                    <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 8 }}>
-                                        Format: Country code + Number without spaces or + sign. (e.g. 919876543210 for India)
-                                    </p>
-                                )}
-                            </div>
-                        )}
+                        <div>
+                            <label htmlFor="linkValue" style={labelStyle}>
+                                {linkType === "WHATSAPP" ? "WhatsApp Number" :
+                                 linkType === "INSTAGRAM_REEL" ? "Instagram Reel Link" :
+                                 "External Website URL"}
+                            </label>
+                            <input
+                                id="linkValue"
+                                type="text"
+                                value={linkValue}
+                                onChange={(e) => setLinkValue(e.target.value)}
+                                placeholder={
+                                    linkType === "WHATSAPP" ? "e.g. 919876543210 (leave empty to use store default)" :
+                                    linkType === "INSTAGRAM_REEL" ? "e.g. https://www.instagram.com/reel/C..." :
+                                    "e.g. https://example.com"
+                                }
+                                style={getInputStyle(!!errors.linkValue)}
+                            />
+                            {errors.linkValue && <span style={{ display: "block", marginTop: 4, fontSize: 12, color: "var(--danger)" }}>{errors.linkValue[0]}</span>}
+                            
+                            {linkType === "WHATSAPP" && (
+                                <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 8 }}>
+                                    Format: Country code + Number without spaces or + sign (e.g. 919876543210). Leave empty to use store default WhatsApp link.
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                     {/* Scheduling Card */}

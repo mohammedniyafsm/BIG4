@@ -94,7 +94,7 @@ export default function LoginPage() {
                         alt="Big4 Logo"
                         className="light-logo"
                         style={{
-                            width: 140,
+                            width: 130,
                             height: "auto",
                             objectFit: "contain",
                             display: "block",
@@ -106,7 +106,7 @@ export default function LoginPage() {
                         alt="Big4 Logo"
                         className="dark-logo"
                         style={{
-                            width: 120,
+                            width: 150,
                             height: "auto",
                             objectFit: "contain",
                             display: "block",

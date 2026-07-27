@@ -5,6 +5,7 @@ import productRoutes from './routes/product.routes';
 import categoryRoutes from './routes/category.routes';
 import adminRoutes from './routes/admin.routes';
 import offerRoutes from './routes/offer.routes';
+import brandRoutes from './routes/brand.routes';
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
       callback(null, true);
     } else {
-      callback(null, true);
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
@@ -42,6 +43,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/offers', offerRoutes);
+app.use('/api/brands', brandRoutes);
 
 // Mount admin routes
 app.use('/api/admin', adminRoutes);

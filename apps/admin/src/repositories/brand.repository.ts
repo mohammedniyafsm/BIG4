@@ -10,11 +10,15 @@ export const brandRepository = {
      */
     async findAll() {
         return prisma.brand.findMany({
-            orderBy: { name: "asc" },
+            orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
             select: {
                 id: true,
                 name: true,
                 slug: true,
+                imageUrl: true,
+                imagePublicId: true,
+                displayOrder: true,
+                isActive: true,
                 createdAt: true,
                 updatedAt: true,
                 _count: {
@@ -29,13 +33,17 @@ export const brandRepository = {
      */
     async findPaginated(skip: number, take: number) {
         return prisma.brand.findMany({
-            orderBy: { name: "asc" },
+            orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
             skip,
             take,
             select: {
                 id: true,
                 name: true,
                 slug: true,
+                imageUrl: true,
+                imagePublicId: true,
+                displayOrder: true,
+                isActive: true,
                 createdAt: true,
                 updatedAt: true,
                 _count: {

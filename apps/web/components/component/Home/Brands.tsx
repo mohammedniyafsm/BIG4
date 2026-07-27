@@ -1,48 +1,61 @@
-"use client";
-
 import Link from "next/link";
-
 import BrandCard from "@/components/ui/BrandCard";
+import { prisma } from "@/lib/prisma";
 
-// const brands = [
-//   "Simpolo",
-//   "Italus",
-//   "Hindware",
-//   "Naveen Ceramics",
-//   "Marbito Ceramic",
-//   "Somany",
-//   "Anjani Tile",
-//   "Asian Paints Bathsense",
-//   "Johnson",
-//   "Vanora",
-//   "Jaquar",
-//   "Parryware",
-//   "Futura",
-//   "Brizzio",
-//   "Varmora",
-//   "Watercare",
-//   "Acebond",
-//   "JK Tile Adhesive",
-//   "Watertec",
-//   "Sintex",
-//   "Astral Pipes",
-//   "Ashirvad",
-// ];
+export interface BrandItem {
+  id: string;
+  name: string;
+  slug: string;
+  imageUrl?: string | null;
+}
 
-const brands = [
-  "Simpolo",
-  "Italus",
-  "Hindware",
-  "Somany",
-  "Johnson",
-  "Vanora",
-  "Jaquar",
-  "Futura",
-  "Brizzio",
-  "Varmora",
+const fallbackBrands: BrandItem[] = [
+  { id: "1", name: "Simpolo", slug: "simpolo" },
+  { id: "2", name: "Italus", slug: "italus" },
+  { id: "3", name: "Hindware", slug: "hindware" },
+  { id: "4", name: "Somany", slug: "somany" },
+  { id: "5", name: "Johnson", slug: "johnson" },
+  { id: "6", name: "Vanora", slug: "vanora" },
+  { id: "7", name: "Jaquar", slug: "jaquar" },
+  { id: "8", name: "Futura", slug: "futura" },
+  { id: "9", name: "Brizzio", slug: "brizzio" },
+  { id: "10", name: "Varmora", slug: "varmora" },
 ];
 
-export default function BrandsSection() {
+interface BrandsSectionProps {
+  initialBrands?: BrandItem[];
+}
+
+export default async function BrandsSection({ initialBrands }: BrandsSectionProps) {
+  let displayBrands: BrandItem[] = initialBrands || [];
+
+  if (displayBrands.length === 0) {
+    try {
+      displayBrands = await prisma.brand.findMany({
+        where: {
+          isActive: true,
+        },
+        orderBy: [
+          { displayOrder: "asc" },
+          { name: "asc" },
+        ],
+        take: 10,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          imageUrl: true,
+        },
+      });
+    } catch {
+      // Fallback if DB fetch fails
+    }
+  }
+
+  if (displayBrands.length === 0) {
+    displayBrands = fallbackBrands;
+  }
+
   return (
     <section
       id="brands"
@@ -63,10 +76,11 @@ export default function BrandsSection() {
 
         {/* Grid */}
         <div className="grid grid-cols-2 gap-5 md:gap-8 xl:gap-10 w-full">
-          {brands.map((brand) => (
+          {displayBrands.map((brand) => (
             <BrandCard
-              key={brand}
-              title={brand}
+              key={brand.id || brand.name}
+              title={brand.name}
+              imageUrl={brand.imageUrl}
             />
           ))}
         </div>
@@ -77,7 +91,7 @@ export default function BrandsSection() {
 
             <span className="absolute inset-0 origin-left scale-x-0 bg-white transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:scale-x-100" />
 
-            <span  className="relative z-10 text-[8px] md:text-xs lg:text-[8px] font-black transition-colors duration-500 group-hover:text-black">
+            <span className="relative z-10 text-[8px] md:text-xs lg:text-[8px] font-black transition-colors duration-500 group-hover:text-black">
               EXPLORE OUR BRANDS
             </span>
 

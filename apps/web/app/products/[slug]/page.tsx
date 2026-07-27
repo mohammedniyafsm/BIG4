@@ -22,8 +22,7 @@ import {
 
 import { siteConfig } from "@/lib/config/site";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 60;
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -135,7 +134,7 @@ export default async function ProductDetailsPage({ params }: Props) {
   return (
     <div className="light-theme bg-background text-foreground min-h-screen">
       <Navbar theme="light" />
-      <main className="pt-28 pb-20">
+      <main className="pt-28 pb-20 font-inter">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

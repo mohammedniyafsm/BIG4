@@ -61,12 +61,16 @@ model Category {
 }
 
 model Brand {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  slug      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
+  id            String    @id @default(cuid())
+  name          String    @unique
+  slug          String    @unique
+  imageUrl      String?
+  imagePublicId String?
+  displayOrder  Int       @default(0)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  products      Product[]
 
   @@map("brands")
 }
@@ -134,6 +138,7 @@ enum OfferLinkType {
   EXTERNAL_URL
   PRODUCT
   CATEGORY
+  INSTAGRAM_REEL
 }
 
 model Offer {

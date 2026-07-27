@@ -25,10 +25,17 @@ export function Header({ userEmail, userName, onMenuClick, showMenuButton }: Hea
                 alignItems: "center",
                 justifyContent: "space-between",
                 gap: 16,
+                height: 64,
+                minHeight: 64,
+                maxHeight: 64,
+                padding: "0 24px",
+                borderBottom: "1px solid var(--border-default)",
+                background: "var(--bg-card)",
+                boxSizing: "border-box",
             }}
         >
-            {/* Left Side: Mobile Logo */}
-            {showMenuButton ? (
+            {/* Left Side: Mobile Menu Button */}
+            {showMenuButton && (
                 <button
                     onClick={onMenuClick}
                     aria-label="Open menu"
@@ -47,21 +54,6 @@ export function Header({ userEmail, userName, onMenuClick, showMenuButton }: Hea
                         <line x1="3" y1="18" x2="21" y2="18" />
                     </svg>
                 </button>
-            ) : (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <img
-                        src="/logo2.png"
-                        alt="Big4 Logo"
-                        className="light-logo"
-                        style={{ height: 32, objectFit: "contain" }}
-                    />
-                    <img
-                        src="/logo3.png"
-                        alt="Big4 Logo"
-                        className="dark-logo"
-                        style={{ height: 26, objectFit: "contain" }}
-                    />
-                </div>
             )}
 
             {/* Spacer */}

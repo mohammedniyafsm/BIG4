@@ -17,8 +17,11 @@ export async function POST(req: NextRequest) {
     }
 
     tags.forEach((tag) => {
-      if (tag === "offers" || tag === "products") {
+      if (tag === "offers" || tag === "products" || tag === "brands") {
         revalidatePath("/");
+      }
+      if (tag === "brands") {
+        revalidatePath("/brands");
       }
       (revalidateTag as any)(tag);
     });

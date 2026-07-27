@@ -1,11 +1,11 @@
 export const siteConfig = {
   name: "BIG4",
-  legalName: "BIG4 Tiles & Sanitary",
+  legalName: "Big4 Tiles & Sanitarys",
 
   tagline: "Building Beautiful Spaces Since 2017",
 
   description:
-    "Since 2017, BIG4 has been delivering premium tiles, sanitaryware, bathroom fittings, kitchen products, and interior solutions with an uncompromising commitment to quality, innovation, and customer satisfaction.",
+    "Since 2017, Big4 Tiles & Sanitarys has been delivering premium tiles, sanitaryware, bathroom fittings, kitchen products, and interior solutions with an uncompromising commitment to quality, innovation, and customer satisfaction.",
 
   founded: 2017,
 
@@ -30,13 +30,13 @@ export const siteConfig = {
   website: "https://big4.co.in",
 
   googleMapsEmbed:
-    "https://www.google.com/maps?q=Sarah+Commercial+Complex,+Opp+KSRTC+Bus+Stand,+Sullia,+Karnataka+574239&output=embed",
+    "https://www.google.com/maps?q=Big4+Sanitary+and+Tiles@12.5574274,75.3932342&z=17&output=embed",
 
   googleMapsLink:
-    "https://www.google.com/maps/dir//Big4+Tiles+%26+Sanitary,+H95V%2B467,+Sarah+Commercial+Complex,+Mangalore+-+Mysore+Hwy,+opp.+KSRTC+Bus+Stand,+Jattipalla,+Sullia,+Karnataka+574239/@11.5625981,76.1203977,15z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3ba4f32ba503d089:0xd9d51d6ceb7b0102!2m2!1d75.3932359!2d12.5574228?entry=ttu&g_ep=EgoyMDI2MDcxOS4wIKXMDSoASAFQAw%3D%3D",
+    "https://maps.google.com/maps/search/Big4%20Sanitary%20and%20Tiles/@12.557427406311035,75.39323425292969,17z?hl=en",
 
   businessHours: [
-    { days: "Monday - Saturday", hours: "10:00 AM - 7:00 PM" },
+    { days: "Monday - Saturday", hours: "9:00 AM - 7:00 PM" },
     { days: "Sunday", hours: "Closed" },
   ],
 
@@ -61,7 +61,7 @@ export const siteConfig = {
   },
 
   seo: {
-    title: "BIG4 | Premium Tiles & Sanitary Showroom in Sullia",
+    title: "Big4 Tiles & Sanitarys | Premium Showroom in Sullia",
     description:
       "Premium tiles, sanitaryware, bathroom fittings, kitchen products and interior solutions in Sullia. Trusted since 2017.",
     keywords: [

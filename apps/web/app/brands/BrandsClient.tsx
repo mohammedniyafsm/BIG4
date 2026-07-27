@@ -14,7 +14,15 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const availableImages = [
+export interface BrandData {
+  id: string;
+  name: string;
+  slug: string;
+  imageUrl?: string | null;
+  category?: string;
+}
+
+const fallbackImages = [
   "/images/products/44.webp",
   "/images/products/77.webp",
   "/images/products/80.webp",
@@ -23,48 +31,11 @@ const availableImages = [
   "/images/products/46.jpg",
 ];
 
-const categories = [
-  "All",
-  "Ceramics & Tiles",
-  "Sanitaryware",
-  "Bath Fittings",
-  "Luxury Bath",
-  "Designer Surfaces",
-  "Building Materials",
-  "Pipes & Fittings",
-];
+interface BrandsClientProps {
+  brands?: BrandData[];
+}
 
-const brandData: { name: string; category: string }[] = [
-  { name: "Simpolo", category: "Ceramics & Tiles" },
-  { name: "Italus", category: "Luxury Bath" },
-  { name: "Hindware", category: "Sanitaryware" },
-  { name: "Naveen Ceramics", category: "Ceramics & Tiles" },
-  { name: "Marbito Ceramic", category: "Ceramics & Tiles" },
-  { name: "Somany", category: "Ceramics & Tiles" },
-  { name: "Anjani Tile", category: "Ceramics & Tiles" },
-  { name: "Asian Paints Bathsense", category: "Bath Fittings" },
-  { name: "Johnson", category: "Ceramics & Tiles" },
-  { name: "Vanora", category: "Luxury Bath" },
-  { name: "Jaquar", category: "Bath Fittings" },
-  { name: "Parryware", category: "Sanitaryware" },
-  { name: "Futura", category: "Designer Surfaces" },
-  { name: "Brizzio", category: "Luxury Bath" },
-  { name: "Varmora", category: "Ceramics & Tiles" },
-  { name: "Watercare", category: "Bath Fittings" },
-  { name: "Acebond", category: "Building Materials" },
-  { name: "JK Tile Adhesive", category: "Building Materials" },
-  { name: "Watertec", category: "Bath Fittings" },
-  { name: "Sintex", category: "Sanitaryware" },
-  { name: "Astral Pipes", category: "Pipes & Fittings" },
-  { name: "Ashirvad", category: "Pipes & Fittings" },
-];
-
-const brands = brandData.map((item, index) => ({
-  ...item,
-  image: availableImages[index % availableImages.length],
-}));
-
-export default function BrandsClient() {
+export default function BrandsClient({ brands: dbBrands = [] }: BrandsClientProps) {
   const pageRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const copyRef = useRef<HTMLParagraphElement>(null);
@@ -72,12 +43,26 @@ export default function BrandsClient() {
   const brandsContainerRef = useRef<HTMLDivElement>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
-  const filteredBrands =
-    activeCategory === "All"
-      ? brands
-      : brands.filter((b) => b.category === activeCategory);
+  // Display DB brands if available, otherwise graceful fallback
+  const displayBrands = dbBrands.length > 0
+    ? dbBrands.map((b, idx) => ({
+        ...b,
+        image: b.imageUrl || fallbackImages[idx % fallbackImages.length],
+      }))
+    : [
+        { id: "1", name: "Simpolo", slug: "simpolo", image: fallbackImages[0] },
+        { id: "2", name: "Italus", slug: "italus", image: fallbackImages[1] },
+        { id: "3", name: "Hindware", slug: "hindware", image: fallbackImages[2] },
+        { id: "4", name: "Somany", slug: "somany", image: fallbackImages[3] },
+        { id: "5", name: "Johnson", slug: "johnson", image: fallbackImages[4] },
+        { id: "6", name: "Jaquar", slug: "jaquar", image: fallbackImages[5] },
+      ];
+
+  const handleImageError = (id: string) => {
+    setImageErrors((prev) => ({ ...prev, [id]: true }));
+  };
 
   /* ── Hero Entrance Animation ── */
   useEffect(() => {
@@ -114,7 +99,7 @@ export default function BrandsClient() {
     return () => ctx.revert();
   }, []);
 
-  /* ── Pinned Horizontal Side-Scroll & Filter Handling ── */
+  /* ── Pinned Horizontal Side-Scroll ── */
   useEffect(() => {
     if (!brandsWrapperRef.current || !brandsContainerRef.current) return;
 
@@ -165,7 +150,7 @@ export default function BrandsClient() {
       }
       gsap.set(container, { x: 0 });
     };
-  }, [activeCategory]);
+  }, [displayBrands]);
 
   return (
     <>
@@ -219,7 +204,7 @@ export default function BrandsClient() {
           </div>
         </section>
 
-        {/* ── Pinned GSAP Horizontal Scroll Brands Showcase (Mobile & Desktop) ── */}
+        {/* ── Pinned GSAP Horizontal Scroll Brands Showcase ── */}
         <section
           ref={brandsWrapperRef}
           id="brand-grid"
@@ -232,59 +217,54 @@ export default function BrandsClient() {
             </h2>
           </div>
 
-          {/* GSAP Horizontal Track with Left Padding */}
+          {/* GSAP Horizontal Track */}
           <div className="relative flex items-center overflow-hidden w-full">
             <div
               ref={brandsContainerRef}
               className="flex items-start gap-6 sm:gap-8 lg:gap-10 pl-6 sm:pl-12 lg:pl-20 pr-12 lg:pr-24 w-max"
             >
-              {filteredBrands.map((brand, i) => (
-                <article
-                  key={brand.name + i}
-                  className="brand-card flex-shrink-0 w-[80vw] sm:w-[48vw] md:w-[38vw] lg:w-[30vw] xl:w-[26vw] cursor-pointer group"
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f0ede9]">
-                    <Image
-                      src={brand.image}
-                      alt={brand.name}
-                      fill
-                      priority={i < 4}
-                      sizes="(max-width: 640px) 80vw, (max-width: 1024px) 38vw, 26vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
+              {displayBrands.map((brand, i) => {
+                const hasError = imageErrors[brand.id];
+                const showImage = brand.image && !hasError;
+                const fallbackImg = fallbackImages[i % fallbackImages.length];
 
-                  <div className="mt-4">
-                    <h3 className="text-base sm:text-lg font-black uppercase tracking-tight text-[#121212]">
-                      {brand.name}
-                    </h3>
-                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9e8c7a]">
-                      {brand.category}
-                    </p>
-                  </div>
-                </article>
-              ))}
+                return (
+                  <article
+                    key={brand.id || brand.name + i}
+                    className="brand-card flex-shrink-0 w-[80vw] sm:w-[48vw] md:w-[38vw] lg:w-[30vw] xl:w-[26vw] cursor-pointer group"
+                  >
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#f0ede9] flex items-center justify-center">
+                      {showImage ? (
+                        <Image
+                          src={brand.image}
+                          alt={brand.name}
+                          fill
+                          priority={i < 4}
+                          sizes="(max-width: 640px) 80vw, (max-width: 1024px) 38vw, 26vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          onError={() => handleImageError(brand.id)}
+                        />
+                      ) : (
+                        <Image
+                          src={fallbackImg}
+                          alt={brand.name}
+                          fill
+                          sizes="(max-width: 640px) 80vw, (max-width: 1024px) 38vw, 26vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      )}
+                    </div>
+
+                    <div className="mt-4">
+                      <h3 className="text-base sm:text-lg font-black uppercase tracking-tight text-[#121212]">
+                        {brand.name}
+                      </h3>
+                    </div>
+                  </article>
+                );
+              })}
 
               <div className="flex-shrink-0 w-12 lg:w-24" aria-hidden="true" />
-            </div>
-          </div>
-
-          {/* Category Filter Pills */}
-          <div className="mt-10 w-full px-6 sm:px-10 lg:px-20">
-            <div className="flex flex-wrap gap-2.5">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`rounded-full px-4 sm:px-5 py-2 text-[10px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] border transition-all duration-200 ${
-                    activeCategory === cat
-                      ? "bg-[#121212] text-white border-[#121212]"
-                      : "bg-white text-[#6f5f4a] border-[#ccc0b0] hover:border-[#121212] hover:text-[#121212]"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
             </div>
           </div>
         </section>

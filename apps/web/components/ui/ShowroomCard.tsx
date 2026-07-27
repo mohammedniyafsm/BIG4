@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -186,7 +187,7 @@ export default function ShowroomCard({
             Navigate
           </p>
 
-          <button className="group relative flex h-12 items-center gap-4 overflow-hidden border border-[#404040] px-8 text-[10px] font-semibold uppercase tracking-[0.16em]">
+          <Link href="/contact" className="group relative flex h-12 items-center gap-4 overflow-hidden border border-[#404040] px-8 text-[10px] font-semibold uppercase tracking-[0.16em]">
 
             <span className="absolute inset-0 origin-left scale-x-0 bg-white transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:scale-x-100" />
 
@@ -198,7 +199,7 @@ export default function ShowroomCard({
               ↗
             </span>
 
-          </button>
+          </Link>
 
         </div>
       </div>

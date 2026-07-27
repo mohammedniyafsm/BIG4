@@ -14,7 +14,7 @@ import { siteConfig } from "@/lib/config/site";
 const showroom = {
   images: ["/images/hero/1.png"],
   mapUrl: siteConfig.googleMapsEmbed,
-  title: `${siteConfig.name} Experience Center`,
+  title: siteConfig.legalName,
   city: siteConfig.address.city,
   address: `${siteConfig.address.building}, ${siteConfig.address.landmark}, ${siteConfig.address.area}, ${siteConfig.address.city} - ${siteConfig.address.postalCode}`,
   phone: siteConfig.contact.phone,

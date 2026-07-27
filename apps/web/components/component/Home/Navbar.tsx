@@ -201,7 +201,7 @@ export default function Navbar({
             className={`hidden lg:flex w-auto cursor-pointer ${
               isLightStyle 
                 ? "h-20 sm:h-22 lg:h-24 xl:h-26" 
-                : "h-12 sm:h-14 lg:h-16 xl:h-16"
+                : "h-9 sm:h-10 lg:h-12 xl:h-13"
             }`}
             priority
           />
@@ -264,7 +264,7 @@ export default function Navbar({
                 className={`w-auto cursor-pointer ${
                   isLightStyle 
                     ? "h-20 sm:h-22 lg:h-24 xl:h-26" 
-                    : "h-12 sm:h-14 lg:h-16 xl:h-16"
+                    : "h-8 sm:h-9 lg:h-10 xl:h-11"
                 }`}
                 priority
               />

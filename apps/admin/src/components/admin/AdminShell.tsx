@@ -12,8 +12,7 @@ interface AdminShellProps {
 }
 
 /**
- * Client-side admin shell — manages mobile sidebar toggle state.
- * Uses window resize to toggle between desktop sidebar and mobile drawer.
+ * Client-side admin shell — manages mobile sidebar toggle state and desktop layout.
  */
 export function AdminShell({ children, userEmail, userName }: AdminShellProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,37 +26,36 @@ export function AdminShell({ children, userEmail, userName }: AdminShellProps) {
     }, []);
 
     return (
-        <div style={{ display: "flex", height: "100vh", overflow: "hidden", flexDirection: "column" }}>
-            <Header
-                userEmail={userEmail}
-                userName={userName}
-                showMenuButton={false}
+        <div style={{ display: "flex", height: "100vh", width: "100vw", overflow: "hidden" }}>
+            {/* Sidebar on left */}
+            <Sidebar
+                open={isMobile ? sidebarOpen : true}
+                onClose={() => setSidebarOpen(false)}
+                isMobile={isMobile}
             />
 
-            <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
-                {!isMobile && (
-                    <Sidebar
-                        open={true}
-                        onClose={() => {}}
-                        isMobile={false}
-                    />
-                )}
+            {/* Right main area: Header on top, main content below */}
+            <div className="admin-main-content" style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, minHeight: 0, overflowY: "auto" }}>
+                <Header
+                    userEmail={userEmail}
+                    userName={userName}
+                    showMenuButton={isMobile}
+                    onMenuClick={() => setSidebarOpen(true)}
+                />
 
-                <div className="admin-main-content">
-                    <main
-                        style={{
-                            flex: 1,
-                            padding: isMobile ? "16px 16px calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 16px)" : 24,
-                            maxWidth: 1400,
-                            width: "100%",
-                            margin: "0 auto",
-                        }}
-                    >
-                        {children}
-                    </main>
+                <main
+                    style={{
+                        flex: 1,
+                        padding: isMobile ? "16px 16px calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 16px)" : 24,
+                        maxWidth: 1400,
+                        width: "100%",
+                        margin: "0 auto",
+                    }}
+                >
+                    {children}
+                </main>
 
-                    {isMobile && <BottomNav userEmail={userEmail} userName={userName} />}
-                </div>
+                {isMobile && <BottomNav userEmail={userEmail} userName={userName} />}
             </div>
         </div>
     );

@@ -51,6 +51,9 @@ export const metadata: Metadata = {
   },
 };
 
+import { Suspense } from "react";
+import ScrollToTop from "@/components/providers/ScrollToTop";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -61,6 +64,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn(inter.variable, "dark")} suppressHydrationWarning>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <Suspense fallback={null}>
+          <ScrollToTop />
+        </Suspense>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

@@ -10,11 +10,11 @@ import { triggerStorefrontRevalidation } from "@/lib/revalidate";
 /**
  * Server Action: Create a new brand.
  */
-export async function createBrandAction(name: string): Promise<ActionResult> {
+export async function createBrandAction(input: any): Promise<ActionResult> {
     try {
         await requireAuth();
 
-        const parsed = createBrandSchema.safeParse({ name });
+        const parsed = createBrandSchema.safeParse(input);
         if (!parsed.success) {
             return { success: false, message: parsed.error.issues[0]?.message ?? "Invalid input", data: null };
         }
@@ -25,7 +25,7 @@ export async function createBrandAction(name: string): Promise<ActionResult> {
             revalidatePath("/admin/brands");
             revalidatePath("/admin/products");
             revalidatePath("/admin");
-            await triggerStorefrontRevalidation(["products"]);
+            await triggerStorefrontRevalidation(["brands", "products"]);
         }
 
         return result;
@@ -37,11 +37,11 @@ export async function createBrandAction(name: string): Promise<ActionResult> {
 /**
  * Server Action: Update a brand.
  */
-export async function updateBrandAction(id: string, name: string): Promise<ActionResult> {
+export async function updateBrandAction(id: string, input: any): Promise<ActionResult> {
     try {
         await requireAuth();
 
-        const parsed = updateBrandSchema.safeParse({ name });
+        const parsed = updateBrandSchema.safeParse(input);
         if (!parsed.success) {
             return { success: false, message: parsed.error.issues[0]?.message ?? "Invalid input", data: null };
         }
@@ -52,7 +52,7 @@ export async function updateBrandAction(id: string, name: string): Promise<Actio
             revalidatePath("/admin/brands");
             revalidatePath("/admin/products");
             revalidatePath("/admin");
-            await triggerStorefrontRevalidation(["products"]);
+            await triggerStorefrontRevalidation(["brands", "products"]);
         }
 
         return result;
@@ -74,7 +74,7 @@ export async function deleteBrandAction(id: string): Promise<ActionResult> {
             revalidatePath("/admin/brands");
             revalidatePath("/admin/products");
             revalidatePath("/admin");
-            await triggerStorefrontRevalidation(["products"]);
+            await triggerStorefrontRevalidation(["brands", "products"]);
         }
 
         return result;

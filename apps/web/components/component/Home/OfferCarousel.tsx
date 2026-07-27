@@ -42,15 +42,18 @@ export default function OfferCarousel({ offers }: { offers: any[] }) {
       <div className="flex touch-pan-y">
         {offers.map((offer, index) => {
           let href = "#";
+          let buttonText = "Shop Now";
           
-          if (offer.linkType === "PRODUCT") {
-            href = `/products/${offer.linkValue}`;
-          } else if (offer.linkType === "CATEGORY") {
-            href = `/products?category=${offer.linkValue}`;
+          if (offer.linkType === "WHATSAPP") {
+            const num = offer.linkValue ? offer.linkValue.replace(/\D/g, "") : "";
+            href = num ? `https://wa.me/${num}` : siteConfig.contact.whatsappLink;
+            buttonText = "Inquire on WhatsApp";
           } else if (offer.linkType === "EXTERNAL_URL") {
-            href = offer.linkValue;
-          } else if (offer.linkType === "WHATSAPP") {
-            href = siteConfig.contact.whatsappLink;
+            href = offer.linkValue || "#";
+            buttonText = "Visit Website";
+          } else if (offer.linkType === "INSTAGRAM_REEL") {
+            href = offer.linkValue || "#";
+            buttonText = "Watch Reel ↗";
           }
 
           const isFirstSlide = index === 0;
@@ -100,28 +103,28 @@ export default function OfferCarousel({ offers }: { offers: any[] }) {
                 )}
               </div>
               
-              {/* Text Content (Overlay on Desktop, Solid Background Below on Mobile) */}
-              <div className="relative md:absolute md:inset-0 bg-zinc-950 md:bg-transparent md:bg-gradient-to-r md:from-black/90 md:via-black/50 md:to-transparent flex flex-col justify-center items-start p-6 sm:p-8 md:p-16 lg:p-24 z-10 border-t border-white/5 md:border-t-0">
-                <div className="max-w-2xl transform transition-transform duration-700 ease-out translate-y-0 group-hover:md:translate-x-4 w-full">
+              {/* Text Content with Backdrop Blur Card & High Contrast Font Colors */}
+              <div className="relative md:absolute md:inset-0 bg-zinc-950 md:bg-transparent md:bg-gradient-to-r md:from-black/95 md:via-black/70 md:to-transparent flex flex-col justify-center items-start p-6 sm:p-8 md:p-12 lg:p-16 z-10 border-t border-white/5 md:border-t-0">
+                <div className="max-w-2xl transform transition-transform duration-700 ease-out translate-y-0 group-hover:md:translate-x-2 w-full bg-black/65 md:bg-black/50 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-2xl border border-white/15 shadow-2xl">
                   {offer.discountText && (
-                    <span className="inline-block px-3 py-1 mb-3 md:mb-6 text-[10px] md:text-xs font-bold tracking-[0.2em] text-white bg-primary rounded-sm uppercase">
+                    <span className="inline-block px-3.5 py-1.5 mb-3 md:mb-5 text-[10px] md:text-xs font-black tracking-[0.2em] text-white bg-red-600 rounded-md uppercase border border-red-500/40 shadow-md">
                       {offer.discountText}
                     </span>
                   )}
                   
-                  <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black text-white mb-3 md:mb-4 leading-[1.1] tracking-tight drop-shadow-sm">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 md:mb-4 leading-[1.1] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
                     {offer.title}
                   </h2>
                   
                   {offer.description && (
-                    <p className="text-sm md:text-lg text-zinc-300 font-medium mb-6 md:mb-10 max-w-lg drop-shadow-sm line-clamp-3 md:line-clamp-none">
+                    <p className="text-sm md:text-base text-zinc-100 font-medium mb-6 md:mb-8 max-w-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] line-clamp-3 md:line-clamp-none leading-relaxed">
                       {offer.description}
                     </p>
                   )}
                   
                   {offer.linkType !== "NONE" && (
-                    <div className="inline-flex items-center justify-center bg-white text-black px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm font-bold uppercase tracking-widest hover:bg-zinc-200 transition-colors shadow-lg w-full sm:w-auto mt-2 md:mt-0">
-                      {offer.linkType === "WHATSAPP" ? "Inquire Now" : "Shop Now"}
+                    <div className="inline-flex items-center justify-center bg-white text-black px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm font-black uppercase tracking-widest hover:bg-zinc-200 transition-colors shadow-2xl w-full sm:w-auto mt-2 md:mt-0 rounded-md">
+                      {buttonText}
                     </div>
                   )}
                 </div>
