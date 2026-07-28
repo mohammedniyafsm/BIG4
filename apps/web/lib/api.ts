@@ -1,7 +1,23 @@
 /** Storefront Direct Database Data Fetching API */
 import { Category, PaginatedResponse, Product, ProductFilters } from "@/types/product";
 import { prisma } from "@/lib/prisma";
-import { Offer } from "@prisma/client";
+
+export type Offer = {
+  id: string;
+  title: string;
+  description: string | null;
+  discountText: string | null;
+  bannerImage: string;
+  bannerImageMobile: string | null;
+  linkType: string;
+  linkValue: string | null;
+  displayOrder: number;
+  isActive: boolean;
+  startDate: Date | null;
+  endDate: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 function formatProduct(p: any): Product {
   return {
@@ -180,7 +196,7 @@ export async function getCategories(): Promise<{ data: Category[] }> {
       },
     });
 
-    const data: Category[] = rawCategories.map((c) => ({
+    const data: Category[] = rawCategories.map((c: any) => ({
       id: c.id,
       name: c.name,
       slug: c.slug,
@@ -207,7 +223,7 @@ export async function getOffers(): Promise<{ data: Offer[] }> {
       orderBy: { displayOrder: "asc" },
     });
 
-    const activeOffers = rawOffers.filter((offer) => {
+    const activeOffers = rawOffers.filter((offer: any) => {
       if (offer.endDate && new Date(offer.endDate) < now) {
         return false;
       }
