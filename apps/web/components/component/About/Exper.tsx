@@ -25,7 +25,7 @@ const sections = [
   {
     step: "03",
     title: "COMPLETE",
-    src: "/images/products/46.jpg",
+    src: "/images/products/46.webp",
     copy: "End-to-end service from personalized consultation and product selection to reliable delivery and support.",
   },
 ];
@@ -172,9 +172,8 @@ export default function Exper() {
                 ref={(el) => {
                   cardRefs.current[index] = el;
                 }}
-                className={`absolute inset-0 w-full h-full bg-black flex flex-col items-center justify-between gap-6 md:gap-12 px-4 sm:px-8 py-6 sm:py-8 overflow-hidden ${
-                  isEven ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
+                className={`absolute inset-0 w-full h-full bg-black flex flex-col items-center justify-between gap-6 md:gap-12 px-4 sm:px-8 py-6 sm:py-8 overflow-hidden ${isEven ? "md:flex-row" : "md:flex-row-reverse"
+                  }`}
               >
                 {/* Text Content */}
                 <div className="w-full md:w-1/2 flex flex-col justify-center text-left">
