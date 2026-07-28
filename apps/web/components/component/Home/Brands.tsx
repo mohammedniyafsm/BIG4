@@ -61,21 +61,17 @@ export default async function BrandsSection({ initialBrands }: BrandsSectionProp
       id="brands"
       className="bg-black text-white overflow-hidden"
     >
-      <div className="w-full pl-6 sm:pl-8 lg:pl-24 xl:pl-32 2xl:pl-96 pr-6 sm:pr-8 lg:pr-10 xl:pr-12 py-20 md:py-28 xl:py-36">
+      <div className="mx-auto max-w-[1700px] px-6 sm:px-8 lg:px-12 xl:px-20 py-20 md:py-28 xl:py-36 flex flex-col items-center">
 
         {/* Heading */}
-        <div className="mb-16 md:mb-24 lg:mb-28 max-w-[560px]">
-          <h2 className="uppercase font-black leading-[0.95] tracking-[-0.05em] text-[30px] sm:text-[56px] md:text-[68px] lg:text-[56px] xl:text-[60px]">
-            OUR
-            <br />
-            EXCLUSIVE
-            <br />
-            BRANDS
+        <div className="mb-16 md:mb-24 lg:mb-28 text-center max-w-3xl">
+          <h2 className="uppercase font-black leading-[0.95] tracking-[-0.05em] text-[30px] sm:text-[56px] md:text-[68px] lg:text-[56px] xl:text-[60px] text-center">
+            OUR EXCLUSIVE BRANDS
           </h2>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 gap-5 md:gap-8 xl:gap-10 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8 xl:gap-10 w-full justify-items-center items-center">
           {displayBrands.map((brand) => (
             <BrandCard
               key={brand.id || brand.name}
@@ -86,7 +82,7 @@ export default async function BrandsSection({ initialBrands }: BrandsSectionProp
         </div>
 
         {/* CTA */}
-        <div className="mt-10 md:mt-20 lg:mt-10">
+        <div className="mt-12 md:mt-20 flex justify-center">
           <Link href="/brands" className="group relative flex items-center gap-2 md:gap-5 h-10 lg:h-14 overflow-hidden border border-[#4d4d4d] px-8 w-max uppercase font-semibold tracking-[0.12em] pnpm text-white">
 
             <span className="absolute inset-0 origin-left scale-x-0 bg-white transition-transform duration-500 ease-[cubic-bezier(.76,0,.24,1)] group-hover:scale-x-100" />

@@ -12,20 +12,16 @@ if (typeof window !== "undefined") {
 
 const categorySlugMap: Record<string, string> = {
   "Tiles": "tiles",
-  "Sanitary": "sanitaryware",
-  "Bathrooms": "bathrooms",
+  "Sanitary Wares": "sanitaryware",
+  "CP Fittings": "fittings",
   "Interior work": "interior-work",
-  "Kitchen": "kitchen",
-  "Fittings": "fittings",
-  "Closets": "closets",
   "Gum": "adhesives",
   "Pipes": "pipes",
 };
 
 const rows = [
-  ["Tiles", "Sanitary", "Bathrooms", "Interior work"],
-  ["Kitchen", "Fittings", "Closets", "Gum"],
-  ["Pipes"],
+  ["Tiles", "Sanitary Wares", "CP Fittings"],
+  ["Interior work", "Gum", "Pipes"],
 ];
 
 export default function Categories() {

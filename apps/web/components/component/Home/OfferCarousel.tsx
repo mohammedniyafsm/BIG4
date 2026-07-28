@@ -118,7 +118,7 @@ export default function OfferCarousel({ offers }: { offers: any[] }) {
                   
                   {offer.description && (
                     <p className="text-sm md:text-base text-zinc-100 font-medium mb-6 md:mb-8 max-w-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] line-clamp-3 md:line-clamp-none leading-relaxed">
-                      {offer.description}
+                      {offer.description.replace(/Manson/gi, "Monsoon")}
                     </p>
                   )}
                   

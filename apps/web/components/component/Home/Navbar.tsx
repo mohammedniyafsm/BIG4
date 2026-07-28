@@ -130,13 +130,13 @@ export default function Navbar({
       const currentScrollY = window.scrollY;
       const delta = currentScrollY - lastScrollY.current;
 
-      if (currentScrollY <= 80) {
+      if (currentScrollY <= 15) {
         if (isHidden.current) {
           isHidden.current = false;
           gsap.to(navRef.current, {
             y: 0,
-            duration: 0.8,
-            ease: "power3.out",
+            duration: 0.25,
+            ease: "power2.out",
             overwrite: "auto",
           });
         }
@@ -145,27 +145,27 @@ export default function Navbar({
         return;
       }
 
-      if (Math.abs(delta) < 5) {
+      if (Math.abs(delta) < 2) {
         ticking = false;
         return;
       }
 
       if (delta > 0 && !isHidden.current) {
-        // scrolling down -> hide
+        // scrolling down -> hide instantly
         isHidden.current = true;
         gsap.to(navRef.current, {
           y: "-100%",
-          duration: 0.6,
-          ease: "power2.inOut",
+          duration: 0.25,
+          ease: "power2.out",
           overwrite: "auto",
         });
       } else if (delta < 0 && isHidden.current) {
-        // scrolling up -> reveal
+        // scrolling up -> reveal instantly
         isHidden.current = false;
         gsap.to(navRef.current, {
           y: 0,
-          duration: 0.8,
-          ease: "power3.out",
+          duration: 0.25,
+          ease: "power2.out",
           overwrite: "auto",
         });
       }

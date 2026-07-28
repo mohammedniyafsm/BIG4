@@ -161,12 +161,12 @@ export default function BrandsClient({ brands: dbBrands = [] }: BrandsClientProp
 
         {/* ── Hero Section ── */}
         <section className="px-6 py-24 sm:px-8 max-w-4xl mx-auto text-center flex flex-col items-center justify-center min-h-screen">
-          <p className="hero-eyebrow mb-4 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#6f5f4a] whitespace-nowrap">
+          <p className="hero-eyebrow mb-4 text-[8px] md:text-[10px] font-semibold uppercase tracking-[0.3em] text-[#6f5f4a] whitespace-nowrap">
             Elite Tiles &amp; Sanitary Ware
           </p>
           <h1
             ref={titleRef}
-            className="text-3xl font-black uppercase leading-[1.08] tracking-tight text-[#121212] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+            className="text-4xl font-black uppercase leading-[1.05] tracking-tight text-[#121212] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
           >
             <span className="block overflow-hidden pb-1">
               <span className="inline-block title-line">Premium Brands,</span>
@@ -177,7 +177,7 @@ export default function BrandsClient({ brands: dbBrands = [] }: BrandsClientProp
           </h1>
           <p
             ref={copyRef}
-            className="font-inter mt-6 w-full max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed text-[#4a4a4a] font-normal flex flex-wrap justify-center gap-x-[0.3em] gap-y-1"
+            className="font-inter mt-4 w-full max-w-xl text-xs sm:text-xs leading-5 text-[#4a4a4a] font-light flex flex-wrap justify-center gap-x-[0.28em] gap-y-0 mx-auto"
           >
             {"Discover a deeply curated portfolio of world-class names in tiles, sanitary ware, and bath fittings. Engineered for exceptional spaces, crafted for enduring luxury."
               .split(" ")
@@ -188,16 +188,16 @@ export default function BrandsClient({ brands: dbBrands = [] }: BrandsClientProp
               ))}
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row w-full max-w-[280px] sm:max-w-none mx-auto items-center justify-center gap-4">
+          <div className="mt-8 flex flex-col sm:flex-row w-full max-w-[280px] sm:max-w-none mx-auto items-center justify-center gap-4">
             <a
               href="#brand-grid"
-              className="hero-cta-btn flex w-full sm:w-auto items-center justify-center rounded-full bg-[#121212] px-7 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] text-white transition hover:bg-[#2b2b2b]"
+              className="hero-cta-btn flex w-full sm:w-auto items-center justify-center rounded-full bg-[#121212] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-[#2b2b2b]"
             >
               View collection
             </a>
             <Link
               href="/"
-              className="hero-cta-btn flex w-full sm:w-auto items-center justify-center rounded-full border border-[#121212]/20 px-7 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-[0.15em] text-[#121212] transition hover:bg-[#121212] hover:text-white"
+              className="hero-cta-btn flex w-full sm:w-auto items-center justify-center rounded-full border border-[#121212]/20 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#121212] transition hover:bg-[#121212] hover:text-white"
             >
               Back home
             </Link>
