@@ -53,7 +53,7 @@ const showcaseItems = [
     category: "Interior Architecture",
     title: "Integrated Living Space Aesthetics",
     description: "Harmonized color palettes and high-definition surface textures designed to elevate residential living rooms and commercial luxury suites.",
-    src: "/images/products/81.jpg",
+    src: "/images/products/81.webp",
     ratio: 170 / 115,
     align: "start" as const,
   },
