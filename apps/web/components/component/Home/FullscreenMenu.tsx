@@ -236,15 +236,15 @@ export default function FullscreenMenu({
 
                 {/* Header */}
 
-                <header className="flex items-center justify-between px-6 sm:px-10 lg:px-16 pt-6 pb-2">
+                <header className="flex items-center justify-between px-4 sm:px-10 lg:px-16 pt-6 pb-2">
 
-                    <Link href="/" className="menu-logo flex items-center">
+                    <Link href="/" className="menu-logo flex items-center -ml-1 sm:ml-0">
                         <Image
                             src="/images/branding/logo2.png"
                             alt="Logo"
-                            width={240}
-                            height={80}
-                            className="h-8 sm:h-9 md:h-10 w-auto object-contain cursor-pointer"
+                            width={220}
+                            height={70}
+                            className="h-7 sm:h-8 lg:h-9 xl:h-10 w-auto object-contain cursor-pointer"
                             priority
                         />
                     </Link>

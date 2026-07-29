@@ -82,13 +82,13 @@ export function Sidebar({ open, onClose, isMobile }: SidebarProps) {
                             src="/logo2.png"
                             alt="Big4 Logo"
                             className="light-logo"
-                            style={{ height: 28, width: "auto", objectFit: "contain" }}
+                            style={{ height: 30, width: "auto", objectFit: "contain" }}
                         />
                         <img
                             src="/logo3.png"
                             alt="Big4 Logo"
                             className="dark-logo"
-                            style={{ height: 32, width: "auto", objectFit: "contain" }}
+                            style={{ height: 30, width: "auto", objectFit: "contain" }}
                         />
                     </Link>
                 </div>

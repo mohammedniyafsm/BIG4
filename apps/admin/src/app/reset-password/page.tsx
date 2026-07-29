@@ -389,7 +389,7 @@ export default function ResetPasswordPage() {
                         alt="Big4 Logo"
                         className="dark-logo"
                         style={{
-                            width: 150,
+                            width: 140,
                             height: "auto",
                             objectFit: "contain",
                             display: "block",

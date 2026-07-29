@@ -190,19 +190,15 @@ export default function Navbar({
       ref={navRef}
       className={`fixed top-0 left-0 z-50 w-full transition-colors duration-300 ${bgColor} ${computedTextColor} ${className}`}
     >
-      <div className="mx-auto flex h-16 sm:h-20 lg:h-24 items-center justify-between px-6 sm:px-6 lg:px-10 xl:px-16 py-12 lg:py-20">
+      <div className="mx-auto flex h-16 sm:h-20 lg:h-24 items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-16 py-12 lg:py-20">
         {/* Logo */}
-        <Link href="/" className="nav-logo">
+        <Link href="/" className="nav-logo hidden lg:flex -ml-1 lg:-ml-2">
           <Image
             src={isLightStyle ? "/images/branding/logo2.png" : "/images/branding/logo1.png"}
             alt="Logo"
             width={220}
             height={70}
-            className={`hidden lg:flex w-auto cursor-pointer ${
-              isLightStyle 
-                ? "h-7 sm:h-8 lg:h-9 xl:h-10" 
-                : "h-7 sm:h-8 lg:h-9 xl:h-10"
-            }`}
+            className="hidden lg:flex h-7 sm:h-8 lg:h-9 xl:h-10 w-auto cursor-pointer"
             priority
           />
         </Link>
@@ -254,18 +250,14 @@ export default function Navbar({
 
         {/* Mobile Navigation */}
         <div className="flex w-full justify-between items-center gap-3 sm:gap-5 lg:hidden">
-          <div>
+          <div className="-ml-1 sm:ml-0">
             <Link href="/" className="nav-logo">
               <Image
                 src={isLightStyle ? "/images/branding/logo2.png" : "/images/branding/logo1.png"}
                 alt="Logo"
                 width={220}
                 height={70}
-                className={`w-auto cursor-pointer ${
-                  isLightStyle 
-                    ? "h-6 sm:h-7 lg:h-8 xl:h-9" 
-                    : "h-6 sm:h-7 lg:h-8 xl:h-9"
-                }`}
+                className="h-6 sm:h-7 lg:h-8 xl:h-9 w-auto cursor-pointer"
                 priority
               />
             </Link>
