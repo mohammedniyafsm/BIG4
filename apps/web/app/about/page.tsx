@@ -3,7 +3,6 @@ import AboutClient from "./AboutClient";
 import { siteConfig } from "@/lib/config/site";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "About Us | Big4 Tiles & Sanitary Showroom in Sullia",

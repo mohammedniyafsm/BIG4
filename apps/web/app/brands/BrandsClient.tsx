@@ -26,9 +26,9 @@ const fallbackImages = [
   "/images/products/44.webp",
   "/images/products/77.webp",
   "/images/products/80.webp",
-  "/images/products/81.jpg",
+  "/images/products/81.webp",
   "/images/products/45.webp",
-  "/images/products/46.jpg",
+  "/images/products/46.webp",
 ];
 
 interface BrandsClientProps {
