@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import path from "node:path";
@@ -14,10 +13,7 @@ import path from "node:path";
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
-// Create Prisma client with Neon adapter
-const connectionString = process.env.DATABASE_URL!;
-const adapter = new PrismaNeon({ connectionString });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 /** Showroom categories to seed */
 const CATEGORIES = [
