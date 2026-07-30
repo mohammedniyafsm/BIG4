@@ -236,14 +236,14 @@ export default function FullscreenMenu({
 
                 {/* Header */}
 
-                <header className="flex items-center justify-between px-4 sm:px-10 lg:px-16 pt-6 pb-2">
+                <header className="mx-auto flex h-16 sm:h-20 lg:h-24 w-full items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-16">
 
-                    <Link href="/" className="menu-logo flex items-center -ml-1 sm:ml-0">
+                    <Link href="/" className="menu-logo flex items-center">
                         <Image
                             src="/images/branding/logo2.png"
                             alt="Logo"
-                            width={220}
-                            height={70}
+                            width={200}
+                            height={43}
                             className="h-7 sm:h-8 lg:h-9 xl:h-10 w-auto object-contain cursor-pointer"
                             priority
                         />
@@ -251,10 +251,10 @@ export default function FullscreenMenu({
 
                     <button
                         onClick={() => setMenuOpen(false)}
-                        className="menu-close text-black text-4xl sm:text-5xl leading-none flex items-center justify-center p-1 hover:opacity-70 transition-opacity"
+                        className="menu-close flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center text-black text-3xl sm:text-4xl leading-none hover:opacity-70 transition-opacity cursor-pointer"
                         aria-label="Close menu"
                     >
-                        ×
+                        ✕
                     </button>
 
                 </header>

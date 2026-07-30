@@ -82,3 +82,25 @@ export async function deleteBrandAction(id: string): Promise<ActionResult> {
         return { success: false, message: "Something went wrong", data: null };
     }
 }
+
+/**
+ * Server Action: Reorder brands.
+ */
+export async function reorderBrandsAction(updates: { id: string; displayOrder: number }[]): Promise<ActionResult> {
+    try {
+        await requireAuth();
+
+        const result = await brandService.reorder(updates);
+
+        if (result.success) {
+            revalidatePath("/admin/brands");
+            revalidatePath("/admin/products");
+            revalidatePath("/admin");
+            await triggerStorefrontRevalidation(["brands", "products"]);
+        }
+
+        return result;
+    } catch {
+        return { success: false, message: "Something went wrong", data: null };
+    }
+}

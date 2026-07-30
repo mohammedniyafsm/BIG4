@@ -37,7 +37,7 @@ export default async function BrandsSection({ initialBrands }: BrandsSectionProp
         },
         orderBy: [
           { displayOrder: "asc" },
-          { name: "asc" },
+          { createdAt: "desc" },
         ],
         take: 10,
         select: {

@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
       },
       orderBy: [
         { displayOrder: 'asc' },
-        { name: 'asc' },
+        { createdAt: 'desc' },
       ],
       take,
       select: {

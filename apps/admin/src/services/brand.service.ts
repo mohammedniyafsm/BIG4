@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { brandRepository } from "@/repositories/brand.repository";
 import { generateUniqueSlug } from "@/lib/slugify";
 import { deleteImage } from "@/lib/cloudinary";
@@ -14,7 +15,21 @@ export const brandService = {
      * Get all brands with product counts.
      */
     async getAll() {
-        return brandRepository.findAll();
+        const brands = await brandRepository.findAll();
+        const needsNormalization = brands.some((b) => !b.displayOrder || b.displayOrder <= 0);
+        if (needsNormalization && brands.length > 0) {
+            const updates = brands.map((b, idx) => ({ id: b.id, displayOrder: idx + 1 }));
+            await prisma.$transaction(
+                updates.map((u) =>
+                    prisma.brand.update({
+                        where: { id: u.id },
+                        data: { displayOrder: u.displayOrder },
+                    })
+                )
+            );
+            return brandRepository.findAll();
+        }
+        return brands;
     },
 
     /**
@@ -40,6 +55,26 @@ export const brandService = {
     },
 
     /**
+     * Reorder brands by updating displayOrders in a single transaction.
+     */
+    async reorder(updates: { id: string; displayOrder: number }[]): Promise<ActionResult> {
+        try {
+            await prisma.$transaction(
+                updates.map((u) =>
+                    prisma.brand.update({
+                        where: { id: u.id },
+                        data: { displayOrder: u.displayOrder },
+                    })
+                )
+            );
+            return { success: true, message: "Brand order updated successfully", data: null };
+        } catch (error: any) {
+            console.error("brandService.reorder error:", error);
+            return { success: false, message: "Failed to reorder brands", data: null };
+        }
+    },
+
+    /**
      * Create a new brand.
      */
     async create(input: CreateBrandInput): Promise<ActionResult> {
@@ -52,14 +87,46 @@ export const brandService = {
             brandRepository.slugExists(s)
         );
 
+        const requestedOrder = Math.max(1, input.displayOrder ?? 1);
+
+        // Fetch existing brands ordered by current displayOrder
+        const existingBrands = await prisma.brand.findMany({
+            orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }],
+            select: { id: true, displayOrder: true },
+        });
+
+        // Calculate shifted orders for existing brands to make room for requested position
+        const updatedOrders: { id: string; displayOrder: number }[] = [];
+        let currentPos = 1;
+        for (const brand of existingBrands) {
+            if (currentPos === requestedOrder) {
+                currentPos++;
+            }
+            if (brand.displayOrder !== currentPos) {
+                updatedOrders.push({ id: brand.id, displayOrder: currentPos });
+            }
+            currentPos++;
+        }
+
         await brandRepository.create({
             name: input.name,
             slug,
             imageUrl: input.imageUrl || null,
             imagePublicId: input.imagePublicId || null,
-            displayOrder: input.displayOrder ?? 0,
+            displayOrder: requestedOrder,
             isActive: input.isActive ?? true,
         });
+
+        if (updatedOrders.length > 0) {
+            await prisma.$transaction(
+                updatedOrders.map((u) =>
+                    prisma.brand.update({
+                        where: { id: u.id },
+                        data: { displayOrder: u.displayOrder },
+                    })
+                )
+            );
+        }
 
         return { success: true, message: "Brand created successfully", data: null };
     },
@@ -85,15 +152,46 @@ export const brandService = {
         });
 
         const oldImagePublicId = existing.imagePublicId;
+        const requestedOrder = Math.max(1, input.displayOrder ?? 1);
+
+        // Shift existing other brands if position changed
+        const otherBrands = await prisma.brand.findMany({
+            where: { id: { not: id } },
+            orderBy: [{ displayOrder: "asc" }, { createdAt: "desc" }],
+            select: { id: true, displayOrder: true },
+        });
+
+        const updatedOrders: { id: string; displayOrder: number }[] = [];
+        let currentPos = 1;
+        for (const brand of otherBrands) {
+            if (currentPos === requestedOrder) {
+                currentPos++;
+            }
+            if (brand.displayOrder !== currentPos) {
+                updatedOrders.push({ id: brand.id, displayOrder: currentPos });
+            }
+            currentPos++;
+        }
 
         await brandRepository.update(id, {
             name: input.name,
             slug,
             imageUrl: input.imageUrl ?? null,
             imagePublicId: input.imagePublicId ?? null,
-            displayOrder: input.displayOrder ?? 0,
+            displayOrder: requestedOrder,
             isActive: input.isActive ?? true,
         });
+
+        if (updatedOrders.length > 0) {
+            await prisma.$transaction(
+                updatedOrders.map((u) =>
+                    prisma.brand.update({
+                        where: { id: u.id },
+                        data: { displayOrder: u.displayOrder },
+                    })
+                )
+            );
+        }
 
         // Delete old image asset from Cloudinary ONLY after DB update succeeds
         if (oldImagePublicId && oldImagePublicId !== input.imagePublicId) {

@@ -190,15 +190,15 @@ export default function Navbar({
       ref={navRef}
       className={`fixed top-0 left-0 z-50 w-full transition-colors duration-300 ${bgColor} ${computedTextColor} ${className}`}
     >
-      <div className="mx-auto flex h-16 sm:h-20 lg:h-24 items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-16 py-12 lg:py-20">
+      <div className="mx-auto flex h-16 sm:h-20 lg:h-24 items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-16">
         {/* Logo */}
-        <Link href="/" className="nav-logo hidden lg:flex -ml-1 lg:-ml-2">
+        <Link href="/" className="nav-logo hidden lg:flex items-center">
           <Image
             src={isLightStyle ? "/images/branding/logo2.png" : "/images/branding/logo1.png"}
             alt="Logo"
-            width={220}
-            height={70}
-            className="hidden lg:flex h-7 sm:h-8 lg:h-9 xl:h-10 w-auto cursor-pointer"
+            width={200}
+            height={43}
+            className="hidden lg:flex h-7 sm:h-8 lg:h-9 xl:h-10 w-auto object-contain cursor-pointer"
             priority
           />
         </Link>
@@ -242,7 +242,7 @@ export default function Navbar({
               alt="Menu"
               width={42}
               height={42}
-              className={`nav-menu h-10 w-10 cursor-pointer ${isLightStyle ? 'invert' : ''}`}
+              className={`nav-menu h-8 w-8 sm:h-10 sm:w-10 cursor-pointer ${isLightStyle ? 'invert' : ''}`}
               onClick={() => activeSetMenuOpen(true)}
             />
           </div>
@@ -250,14 +250,14 @@ export default function Navbar({
 
         {/* Mobile Navigation */}
         <div className="flex w-full justify-between items-center gap-3 sm:gap-5 lg:hidden">
-          <div className="-ml-1 sm:ml-0">
-            <Link href="/" className="nav-logo">
+          <div className="flex items-center">
+            <Link href="/" className="nav-logo flex items-center">
               <Image
                 src={isLightStyle ? "/images/branding/logo2.png" : "/images/branding/logo1.png"}
                 alt="Logo"
-                width={220}
-                height={70}
-                className="h-6 sm:h-7 lg:h-8 xl:h-9 w-auto cursor-pointer"
+                width={200}
+                height={43}
+                className="h-7 sm:h-8 lg:h-9 xl:h-10 w-auto object-contain cursor-pointer"
                 priority
               />
             </Link>

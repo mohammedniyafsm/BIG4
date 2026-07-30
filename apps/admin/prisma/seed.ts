@@ -112,7 +112,8 @@ async function seedBrands() {
     let created = 0;
     let skipped = 0;
 
-    for (const brand of BRANDS) {
+    for (let i = 0; i < BRANDS.length; i++) {
+        const brand = BRANDS[i];
         const existing = await prisma.brand.findUnique({
             where: { slug: brand.slug },
         });
@@ -122,7 +123,12 @@ async function seedBrands() {
             continue;
         }
 
-        await prisma.brand.create({ data: brand });
+        await prisma.brand.create({
+            data: {
+                ...brand,
+                displayOrder: i + 1,
+            },
+        });
         created++;
     }
 

@@ -32,7 +32,7 @@ export default async function BrandsPage() {
       },
       orderBy: [
         { displayOrder: "asc" },
-        { name: "asc" },
+        { createdAt: "desc" },
       ],
       select: {
         id: true,

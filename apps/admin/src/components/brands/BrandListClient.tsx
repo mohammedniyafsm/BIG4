@@ -9,6 +9,7 @@ import {
     createBrandAction,
     updateBrandAction,
     deleteBrandAction,
+    reorderBrandsAction,
 } from "@/actions/brand.actions";
 
 export interface BrandItem {
@@ -51,13 +52,44 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
     // Delete target
     const [deleteTarget, setDeleteTarget] = useState<BrandItem | null>(null);
     const [deleting, setDeleting] = useState(false);
+    const [reordering, setReordering] = useState(false);
+
+    const moveBrand = async (index: number, direction: -1 | 1) => {
+        if (reordering) return;
+        if (index + direction < 0 || index + direction >= brands.length) return;
+
+        setReordering(true);
+
+        const newBrands = [...brands];
+        const temp = newBrands[index];
+        newBrands[index] = newBrands[index + direction];
+        newBrands[index + direction] = temp;
+
+        newBrands.forEach((b, i) => {
+            b.displayOrder = i + 1;
+        });
+
+        setBrands(newBrands);
+
+        const updates = newBrands.map((b) => ({ id: b.id, displayOrder: b.displayOrder }));
+        const result = await reorderBrandsAction(updates);
+        setReordering(false);
+
+        if (result.success) {
+            toast("Brand order updated", "success");
+        } else {
+            toast(result.message || "Failed to update order", "error");
+            setBrands(brands);
+        }
+    };
 
     const openCreateModal = () => {
         setEditingBrand(null);
         setName("");
         setImageUrl(null);
         setImagePublicId(null);
-        setDisplayOrder(brands.length);
+        const maxOrder = brands.length > 0 ? Math.max(...brands.map((b) => b.displayOrder || 0)) : 0;
+        setDisplayOrder(maxOrder + 1);
         setIsActive(true);
         setFormError("");
         setModalOpen(true);
@@ -158,14 +190,14 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
                                 <tr>
                                     <th style={{ width: 80 }}>Logo / Image</th>
                                     <th>Name & Slug</th>
-                                    <th style={{ textAlign: "center" }}>Order</th>
+                                    <th style={{ textAlign: "center", width: 140 }}>Position / Order</th>
                                     <th style={{ textAlign: "center" }}>Status</th>
                                     <th style={{ textAlign: "center" }}>Products</th>
                                     <th style={{ textAlign: "right", width: 160 }}>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {brands.map((brand) => (
+                                {brands.map((brand, idx) => (
                                     <tr key={brand.id}>
                                         <td>
                                             {brand.imageUrl ? (
@@ -182,8 +214,66 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
                                             <div style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 14 }}>{brand.name}</div>
                                             <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2 }}>slug: {brand.slug}</div>
                                         </td>
-                                        <td style={{ textAlign: "center", fontWeight: 500, fontSize: 13, color: "var(--text-secondary)" }}>
-                                            {brand.displayOrder}
+                                        <td style={{ textAlign: "center" }}>
+                                            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                                                <button
+                                                    type="button"
+                                                    disabled={reordering || idx === 0}
+                                                    onClick={() => moveBrand(idx, -1)}
+                                                    title="Move Up (Higher priority)"
+                                                    style={{
+                                                        width: 26,
+                                                        height: 26,
+                                                        borderRadius: 4,
+                                                        border: "1px solid var(--border-default)",
+                                                        background: "var(--bg-card)",
+                                                        cursor: idx === 0 || reordering ? "not-allowed" : "pointer",
+                                                        opacity: idx === 0 || reordering ? 0.3 : 1,
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        fontWeight: "bold",
+                                                        fontSize: 11,
+                                                        color: "var(--text-primary)"
+                                                    }}
+                                                >
+                                                    ▲
+                                                </button>
+                                                <span style={{
+                                                    fontSize: 12,
+                                                    fontWeight: 700,
+                                                    padding: "2px 8px",
+                                                    borderRadius: 12,
+                                                    background: brand.displayOrder === 1 ? "rgba(59, 130, 246, 0.12)" : "var(--bg-canvas)",
+                                                    color: brand.displayOrder === 1 ? "#2563eb" : "var(--text-primary)",
+                                                    border: brand.displayOrder === 1 ? "1px solid rgba(59, 130, 246, 0.3)" : "1px solid var(--border-default)"
+                                                }}>
+                                                    #{brand.displayOrder || idx + 1}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    disabled={reordering || idx === brands.length - 1}
+                                                    onClick={() => moveBrand(idx, 1)}
+                                                    title="Move Down (Lower priority)"
+                                                    style={{
+                                                        width: 26,
+                                                        height: 26,
+                                                        borderRadius: 4,
+                                                        border: "1px solid var(--border-default)",
+                                                        background: "var(--bg-card)",
+                                                        cursor: idx === brands.length - 1 || reordering ? "not-allowed" : "pointer",
+                                                        opacity: idx === brands.length - 1 || reordering ? 0.3 : 1,
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        fontWeight: "bold",
+                                                        fontSize: 11,
+                                                        color: "var(--text-primary)"
+                                                    }}
+                                                >
+                                                    ▼
+                                                </button>
+                                            </div>
                                         </td>
                                         <td style={{ textAlign: "center" }}>
                                             <span className={`badge ${brand.isActive ? "badge-active" : "badge-archived"}`}>
@@ -292,13 +382,14 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
                                 {/* Display Order */}
                                 <div>
                                     <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 6 }}>
-                                        Display Order
+                                        Order Number / Position *
                                     </label>
                                     <input
                                         type="number"
-                                        min={0}
+                                        min={1}
                                         value={displayOrder}
-                                        onChange={(e) => setDisplayOrder(parseInt(e.target.value, 10) || 0)}
+                                        onChange={(e) => setDisplayOrder(parseInt(e.target.value, 10) || 1)}
+                                        placeholder="e.g. 1 for 1st position"
                                         style={{
                                             width: "100%",
                                             padding: "12px 16px",
@@ -310,6 +401,9 @@ export function BrandListClient({ brands: initialBrands }: BrandListClientProps)
                                             color: "var(--text-primary)",
                                         }}
                                     />
+                                    <span style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4, display: "block" }}>
+                                        1 = 1st position on home page & brands page
+                                    </span>
                                 </div>
 
                                 {/* Active Toggle */}
